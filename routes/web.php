@@ -16,6 +16,10 @@ Route::view('dokumen/create', 'documents.create')
     ->middleware(['auth', 'role:admin_opd|admin_desa|super_admin'])
     ->name('documents.create');
 
+Route::view('dokumen/revisi', 'documents.revision')
+    ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
+    ->name('documents.revision');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
