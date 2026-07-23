@@ -78,7 +78,7 @@
                 </div>
 
                 <!-- Sidebar Footer -->
-                <div class="p-4 border-t border-[#133256]">
+                <div class="p-4 border-t border-[#133256] space-y-1">
                     <a href="#" class="flex items-center gap-3 px-3 py-2 text-xs font-semibold uppercase text-gray-400 hover:text-white transition-all tracking-wider">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
@@ -86,6 +86,16 @@
                         </svg>
                         <span>Pengaturan</span>
                     </a>
+
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="w-full text-left flex items-center gap-3 px-3 py-2 text-xs font-semibold uppercase text-rose-400 hover:text-rose-300 transition-all tracking-wider cursor-pointer">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                            <span>Keluar (Logout)</span>
+                        </button>
+                    </form>
                 </div>
             </aside>
 
@@ -127,13 +137,33 @@
 
                         <div class="h-6 w-px bg-gray-200"></div>
 
-                        <!-- User Profile Widget -->
-                        <div class="flex items-center gap-3">
-                            <div class="text-right">
-                                <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Super Admin' }}</h4>
-                                <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">ADMINISTRATOR</span>
+                        <!-- User Profile Widget & Interactive Dropdown -->
+                        <div class="relative" x-data="{ dropdownOpen: false }">
+                            <button @click="dropdownOpen = !dropdownOpen" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
+                                <div class="text-right">
+                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Super Admin' }}</h4>
+                                    <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">ADMINISTRATOR</span>
+                                </div>
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Super Admin') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
+                            </button>
+
+                            <!-- Profile Dropdown Menu -->
+                            <div x-show="dropdownOpen" @click.outside="dropdownOpen = false" x-cloak
+                                 class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50 transition-all">
+                                <div class="px-4 py-2 border-b border-gray-100">
+                                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Signed In As</p>
+                                    <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->username ?? Auth::user()->email }}</p>
+                                </div>
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+                                    <button type="submit" class="w-full text-left px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-all">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                        </svg>
+                                        <span>Keluar (Logout)</span>
+                                    </button>
+                                </form>
                             </div>
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Super Admin') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
                         </div>
                     </div>
                 </header>
