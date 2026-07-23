@@ -24,6 +24,10 @@ Route::view('dokumen/revisi', 'documents.revision')
     ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
     ->name('documents.revision');
 
+Route::view('dokumen/persetujuan', 'documents.approvals')
+    ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
+    ->name('documents.approvals');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');

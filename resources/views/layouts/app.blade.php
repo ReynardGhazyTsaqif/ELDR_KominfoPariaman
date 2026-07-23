@@ -45,6 +45,18 @@
                                 <span>Daftar Dokumen</span>
                             </a>
 
+                            @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum') || Auth::user()->hasRole('super_admin')))
+                                <a href="{{ route('documents.approvals') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <div class="flex items-center gap-3">
+                                        <svg class="w-5 h-5 {{ request()->routeIs('documents.approvals') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <span>Persetujuan</span>
+                                    </div>
+                                    <span class="bg-[#F5BF38] text-[#061D38] font-black text-[10px] px-2 py-0.5 rounded-full">5</span>
+                                </a>
+                            @endif
+
                             @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
                                 <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
