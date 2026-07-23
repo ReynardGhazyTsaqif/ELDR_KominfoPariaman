@@ -13,7 +13,7 @@
         </div>
 
         <!-- Right Ajukan Dokumen Baru CTA Box -->
-        <div class="w-full lg:w-[320px] bg-[#062447] text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-between cursor-pointer group">
+        <a href="{{ route('documents.create') }}" class="w-full lg:w-[320px] bg-[#062447] text-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all flex items-center justify-between cursor-pointer group">
             <div class="flex items-center gap-3.5">
                 <div class="w-11 h-11 rounded-xl bg-white/10 flex items-center justify-center text-white group-hover:scale-105 transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -25,7 +25,7 @@
                     <span class="font-bold text-base text-white tracking-tight leading-tight">Baru</span>
                 </div>
             </div>
-        </div>
+        </a>
     </div>
 
     <!-- 2. 3 KPI Summary Cards Row -->

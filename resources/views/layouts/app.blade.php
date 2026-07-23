@@ -95,12 +95,12 @@
 
                 <!-- Sidebar Bottom CTA Button -->
                 <div class="p-4 border-t border-[#133256] space-y-2">
-                    <button type="button" class="w-full bg-[#F5BF38] hover:bg-[#E0AE2F] text-[#061D38] font-black py-2.5 px-4 rounded-xl shadow-sm transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer">
+                    <a href="{{ route('documents.create') }}" class="w-full bg-[#F5BF38] hover:bg-[#E0AE2F] text-[#061D38] font-black py-2.5 px-4 rounded-xl shadow-sm transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer">
                         <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         <span>Buat Dokumen Baru</span>
-                    </button>
+                    </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
