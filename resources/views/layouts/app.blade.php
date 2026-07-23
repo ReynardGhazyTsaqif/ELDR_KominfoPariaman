@@ -161,8 +161,8 @@
                         <div class="h-6 w-px bg-gray-200"></div>
 
                         <!-- User Profile Widget & Interactive Dropdown -->
-                        <div class="relative" x-data="{ dropdownOpen: false }">
-                            <button @click.stop="dropdownOpen = !dropdownOpen" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
+                        <div class="relative" x-data="{ open: false }">
+                            <button @click="open = ! open" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
                                 <div class="text-right">
                                     <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Admin Hukum' }}</h4>
                                     <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">
@@ -183,8 +183,8 @@
                             </button>
 
                             <!-- Profile Dropdown Menu -->
-                            <div x-show="dropdownOpen" @click.away="dropdownOpen = false" x-cloak
-                                 class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50 transition-all">
+                            <div x-show="open" @click.outside="open = false" x-cloak
+                                 class="absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50">
                                 <div class="px-4 py-2 border-b border-gray-100">
                                     <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Signed In As</p>
                                     <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->username ?? Auth::user()->email }}</p>
