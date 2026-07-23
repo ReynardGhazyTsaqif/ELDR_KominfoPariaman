@@ -8,6 +8,10 @@ Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
+Route::view('dokumen', 'documents.index')
+    ->middleware(['auth'])
+    ->name('documents.index');
+
 Route::view('dokumen/create', 'documents.create')
     ->middleware(['auth', 'role:admin_opd|admin_desa|super_admin'])
     ->name('documents.create');
