@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             MasterDataSeeder::class,
             DateDimensionSeeder::class,
             UserSeeder::class,
+            PegawaiUnitKerjaSeeder::class,
         ]);
     }
 }

@@ -66,11 +66,11 @@ class DocumentSubmissionService
         string $catatan,
         ?string $fileRevisiFisik = null
     ): PengajuanDokumen {
+        $actorSubjek = $this->subjekService->findOrCreateForUser($user);
         $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
             ->latest('id_fact')
             ->firstOrFail();
 
-        $subjek = $this->subjekService->findOrCreateForUser($user);
         $dokumenKey = $latest->dokumen_key;
 
         if ($fileRevisiFisik) {
@@ -82,21 +82,69 @@ class DocumentSubmissionService
             $dokumenKey = $dokumenBaru->dokumen_key;
         }
 
-        $statusDokumenKey = $fileRevisiFisik ? 4 : 3; // 4: File Revisi (Upload), 3: File Minta Diperbarui (Tanpa upload)
-        $keterangan = $fileRevisiFisik ? 'File Revisi (Dengan Lampiran)' : 'File Minta Diperbarui';
-
         $dateKey = (int) now()->format('Ymd');
+
+        // Jika dipanggil oleh Kabag Hukum -> kembalikan ke Admin Hukum dulu
+        if ($user->hasRole('kabag_hukum')) {
+            return PengajuanDokumen::create([
+                'dokumen_id' => $dokumenId,
+                'subjek_key' => $actorSubjek->subjek_key, // Record actor Kabag Hukum
+                'dokumen_key' => $dokumenKey,
+                'jenis_dokumen_key' => $latest->jenis_dokumen_key,
+                'perihal_dokumen_key' => $latest->perihal_dokumen_key,
+                'catatan_dokumen' => $catatan,
+                'keterangan' => 'Permintaan Revisi oleh Kabag Hukum',
+                'status_dokumen_key' => 3,   // ST03: File Minta Diperbarui
+                'status_pengajuan_key' => 2, // SP02: Diproses (Kembali ke Admin Hukum)
+                'tanggal_pengajuan_key' => $dateKey,
+            ]);
+        }
+
+        // Jika dipanggil oleh Admin Hukum -> dikembalikan ke OPD/Desa
+        $statusDokumenKey = $fileRevisiFisik ? 4 : 3;
+        $keterangan = $fileRevisiFisik ? 'File Revisi Dikirim ke OPD (Dengan Lampiran)' : 'Revisi Dikembalikan ke OPD oleh Admin Hukum';
 
         return PengajuanDokumen::create([
             'dokumen_id' => $dokumenId,
-            'subjek_key' => $subjek->subjek_key,
+            'subjek_key' => $actorSubjek->subjek_key, // Record actor Admin Hukum
             'dokumen_key' => $dokumenKey,
             'jenis_dokumen_key' => $latest->jenis_dokumen_key,
             'perihal_dokumen_key' => $latest->perihal_dokumen_key,
             'catatan_dokumen' => $catatan,
             'keterangan' => $keterangan,
             'status_dokumen_key' => $statusDokumenKey,
-            'status_pengajuan_key' => 3, // SP03: Ditolak / Revisi
+            'status_pengajuan_key' => 3, // SP03: Ditolak / Perlu Revisi OPD
+            'tanggal_pengajuan_key' => $dateKey,
+        ]);
+    }
+
+    /**
+     * Meneruskan revisi dari Kabag Hukum ke OPD oleh Admin Hukum
+     */
+    public function forwardRevisionToOpd(User $user, int $dokumenId, ?string $catatanTambahan = null): PengajuanDokumen
+    {
+        $actorSubjek = $this->subjekService->findOrCreateForUser($user);
+        $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
+            ->latest('id_fact')
+            ->firstOrFail();
+
+        $catatanGabungan = $latest->catatan_dokumen;
+        if ($catatanTambahan) {
+            $catatanGabungan .= "\n[Catatan Tambahan Admin Hukum]: " . $catatanTambahan;
+        }
+
+        $dateKey = (int) now()->format('Ymd');
+
+        return PengajuanDokumen::create([
+            'dokumen_id' => $dokumenId,
+            'subjek_key' => $actorSubjek->subjek_key, // Record actor Admin Hukum
+            'dokumen_key' => $latest->dokumen_key,
+            'jenis_dokumen_key' => $latest->jenis_dokumen_key,
+            'perihal_dokumen_key' => $latest->perihal_dokumen_key,
+            'catatan_dokumen' => $catatanGabungan,
+            'keterangan' => 'Revisi Diteruskan ke OPD oleh Admin Hukum',
+            'status_dokumen_key' => 3,   // ST03: File Minta Diperbarui
+            'status_pengajuan_key' => 3, // SP03: Ditolak / Perlu Revisi OPD
             'tanggal_pengajuan_key' => $dateKey,
         ]);
     }
@@ -111,11 +159,10 @@ class DocumentSubmissionService
         string $namaFileFisik,
         ?string $catatan = null
     ): PengajuanDokumen {
+        $actorSubjek = $this->subjekService->findOrCreateForUser($user);
         $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
             ->latest('id_fact')
             ->firstOrFail();
-
-        $subjek = $this->subjekService->findOrCreateForUser($user);
 
         $dokumen = Dokumen::create([
             'dokumen_judul' => $judulFile,
@@ -126,7 +173,7 @@ class DocumentSubmissionService
 
         return PengajuanDokumen::create([
             'dokumen_id' => $dokumenId,
-            'subjek_key' => $subjek->subjek_key,
+            'subjek_key' => $actorSubjek->subjek_key, // Record actor OPD / Desa
             'dokumen_key' => $dokumen->dokumen_key,
             'jenis_dokumen_key' => $latest->jenis_dokumen_key,
             'perihal_dokumen_key' => $latest->perihal_dokumen_key,
@@ -143,16 +190,16 @@ class DocumentSubmissionService
      */
     public function approveAdminHukum(User $user, int $dokumenId, ?string $catatan = null): PengajuanDokumen
     {
+        $actorSubjek = $this->subjekService->findOrCreateForUser($user);
         $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
             ->latest('id_fact')
             ->firstOrFail();
 
-        $subjek = $this->subjekService->findOrCreateForUser($user);
         $dateKey = (int) now()->format('Ymd');
 
         return PengajuanDokumen::create([
             'dokumen_id' => $dokumenId,
-            'subjek_key' => $subjek->subjek_key,
+            'subjek_key' => $actorSubjek->subjek_key, // Record actor Admin Hukum
             'dokumen_key' => $latest->dokumen_key,
             'jenis_dokumen_key' => $latest->jenis_dokumen_key,
             'perihal_dokumen_key' => $latest->perihal_dokumen_key,
@@ -169,16 +216,16 @@ class DocumentSubmissionService
      */
     public function approveKabagHukum(User $user, int $dokumenId, ?string $catatan = null): PengajuanDokumen
     {
+        $actorSubjek = $this->subjekService->findOrCreateForUser($user);
         $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
             ->latest('id_fact')
             ->firstOrFail();
 
-        $subjek = $this->subjekService->findOrCreateForUser($user);
         $dateKey = (int) now()->format('Ymd');
 
         return PengajuanDokumen::create([
             'dokumen_id' => $dokumenId,
-            'subjek_key' => $subjek->subjek_key,
+            'subjek_key' => $actorSubjek->subjek_key, // Record actor Kabag Hukum
             'dokumen_key' => $latest->dokumen_key,
             'jenis_dokumen_key' => $latest->jenis_dokumen_key,
             'perihal_dokumen_key' => $latest->perihal_dokumen_key,

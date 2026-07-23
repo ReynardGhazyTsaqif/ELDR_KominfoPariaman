@@ -9,11 +9,14 @@ class MasterDataSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Seed D_JENIS_DOKUMEN
+        // 1. Seed D_JENIS_DOKUMEN (6 Jenis Dokumen Resmi)
         $jenisDokumen = [
-            ['jenis_dokumen_key' => 1, 'kode_jenis_dokumen' => 'K01', 'jenis_dokumen' => 'Perda/Perwako'],
-            ['jenis_dokumen_key' => 2, 'kode_jenis_dokumen' => 'K02', 'jenis_dokumen' => 'SK/Keputusan (WALIKOTA / SEKDA)'],
-            ['jenis_dokumen_key' => 3, 'kode_jenis_dokumen' => 'K03', 'jenis_dokumen' => 'Perdes/Perkades'],
+            ['jenis_dokumen_key' => 1, 'kode_jenis_dokumen' => 'K01', 'jenis_dokumen' => 'Peraturan Walikota (Perwako)'],
+            ['jenis_dokumen_key' => 2, 'kode_jenis_dokumen' => 'K02', 'jenis_dokumen' => 'Keputusan Walikota (SK)'],
+            ['jenis_dokumen_key' => 3, 'kode_jenis_dokumen' => 'K03', 'jenis_dokumen' => 'Peraturan Daerah (Perda)'],
+            ['jenis_dokumen_key' => 4, 'kode_jenis_dokumen' => 'K04', 'jenis_dokumen' => 'Peraturan Desa (Perdes)'],
+            ['jenis_dokumen_key' => 5, 'kode_jenis_dokumen' => 'K05', 'jenis_dokumen' => 'Instruksi Dinas / Kadis'],
+            ['jenis_dokumen_key' => 6, 'kode_jenis_dokumen' => 'K06', 'jenis_dokumen' => 'Standar Operasional (SOP)'],
         ];
 
         foreach ($jenisDokumen as $row) {

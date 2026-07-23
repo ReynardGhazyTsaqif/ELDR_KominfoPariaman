@@ -38,12 +38,14 @@
                                 <span>Dashboard</span>
                             </a>
 
-                            <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
-                                <svg class="w-5 h-5 {{ request()->routeIs('pegawai.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                </svg>
-                                <span>Direktori Pegawai</span>
-                            </a>
+                            @if(Auth::user() && Auth::user()->hasRole('super_admin'))
+                                <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('pegawai.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <span>Direktori Pegawai</span>
+                                </a>
+                            @endif
 
                             <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,32 +55,24 @@
                             </a>
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum') || Auth::user()->hasRole('super_admin')))
-                                <a href="{{ route('documents.approvals') }}" class="flex items-center justify-between px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
-                                    <div class="flex items-center gap-3">
-                                        <svg class="w-5 h-5 {{ request()->routeIs('documents.approvals') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <span>Persetujuan</span>
-                                    </div>
-                                    <span class="bg-[#F5BF38] text-[#061D38] font-black text-[10px] px-2 py-0.5 rounded-full">5</span>
+                                <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('documents.approvals') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                    </svg>
+                                    <span>Persetujuan</span>
                                 </a>
                             @endif
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
-                                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                    </svg>
-                                    <span>Penyusunan</span>
-                                </a>
-
-                                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('documents.history') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
                                     <span>Riwayat</span>
                                 </a>
-                            @else
+                            @endif
+
+                            @if(Auth::user() && Auth::user()->hasRole('super_admin'))
                                 <a href="{{ route('master.desa') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.desa') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.desa') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 5h16" />
@@ -100,28 +94,19 @@
                                     <span>Jenis Dokumen (Master)</span>
                                 </a>
 
+                                <a href="{{ route('master.status') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.status') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('master.status') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 12h10m-8 5h8" />
+                                    </svg>
+                                    <span>Referensi Status</span>
+                                </a>
+
                                 <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('users.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('users.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
                                     <span>Pengaturan User</span>
-                                </a>
-
-                                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                                    </svg>
-                                    <span>Laporan</span>
-                                </a>
                             @endif
-
-                            <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
-                                <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                </svg>
-                                <span>Pengaturan</span>
-                            </a>
                         </nav>
                     </div>
                 </div>
@@ -197,7 +182,7 @@
                         <div class="relative" x-data="{ open: false }">
                             <button @click="open = ! open" onclick="document.getElementById('profile-dropdown-box').classList.toggle('hidden')" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
                                 <div class="text-right">
-                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Admin Hukum' }}</h4>
+                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()?->name ?? 'Admin Hukum' }}</h4>
                                     <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">
                                         @if(Auth::user() && Auth::user()->hasRole('admin_hukum'))
                                             ADMIN HUKUM
@@ -212,7 +197,7 @@
                                         @endif
                                     </span>
                                 </div>
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin Hukum') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()?->name ?? 'Admin Hukum') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
                             </button>
 
                             <!-- Profile Dropdown Menu -->
@@ -220,7 +205,7 @@
                                  class="hidden absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50">
                                 <div class="px-4 py-2 border-b border-gray-100">
                                     <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Signed In As</p>
-                                    <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()->username ?? Auth::user()->email }}</p>
+                                    <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()?->username ?? Auth::user()?->email ?? '-' }}</p>
                                 </div>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
