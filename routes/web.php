@@ -9,7 +9,7 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 Route::view('dokumen/create', 'documents.create')
-    ->middleware(['auth'])
+    ->middleware(['auth', 'role:admin_opd|admin_desa|super_admin'])
     ->name('documents.create');
 
 Route::view('profile', 'profile')
