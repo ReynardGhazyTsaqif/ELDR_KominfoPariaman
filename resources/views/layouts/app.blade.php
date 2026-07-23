@@ -15,20 +15,44 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-[#F4F6F9] text-gray-800 selection:bg-[#061D38] selection:text-white">
-        <div class="min-h-screen flex" x-data="{ sidebarOpen: true }">
-            <!-- Sidebar -->
-            <aside class="w-64 bg-[#061D38] text-white flex flex-col justify-between flex-shrink-0 transition-all duration-300 z-30 min-h-screen fixed top-0 bottom-0 left-0">
-                <div>
+        <div class="min-h-screen flex bg-[#F4F6F9]" x-data="{ sidebarOpen: false }">
+            <!-- Mobile Backdrop Overlay -->
+            <div x-show="sidebarOpen"
+                 x-transition:enter="transition-opacity ease-linear duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition-opacity ease-linear duration-300"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 @click="sidebarOpen = false"
+                 x-cloak
+                 class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs z-40 lg:hidden">
+            </div>
+
+            <!-- Sidebar Drawer (Responsive for Mobile & Desktop) -->
+            <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'"
+                   class="w-64 bg-[#061D38] text-white flex flex-col justify-between flex-shrink-0 transition-transform duration-300 z-50 fixed top-0 bottom-0 left-0 h-screen overflow-hidden">
+                <div class="flex-1 flex flex-col min-h-0">
                     <!-- Sidebar Header / Logo -->
-                    <div class="px-6 py-5 flex items-center gap-3 border-b border-[#133256]">
-                        <img src="{{ asset('images/pariaman_logo.png') }}" alt="Logo Kota Pariaman" class="h-9 w-auto object-contain">
-                        <div>
-                            <h1 class="font-extrabold text-lg tracking-tight text-white leading-none">ELDR</h1>
-                            <span class="text-[10px] text-gray-300 font-semibold tracking-wider block mt-0.5 uppercase">KOTA PARIAMAN</span>
+                    <div class="px-6 py-5 flex items-center justify-between border-b border-[#133256] flex-shrink-0">
+                        <div class="flex items-center gap-3">
+                            <img src="{{ asset('images/pariaman_logo.png') }}" alt="Logo Kota Pariaman" class="h-9 w-auto object-contain">
+                            <div>
+                                <h1 class="font-extrabold text-lg tracking-tight text-white leading-none">ELDR</h1>
+                                <span class="text-[10px] text-gray-300 font-semibold tracking-wider block mt-0.5 uppercase">KOTA PARIAMAN</span>
+                            </div>
                         </div>
+
+                        <!-- Mobile Close Button -->
+                        <button type="button" @click="sidebarOpen = false" class="text-gray-400 hover:text-white lg:hidden">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                        </button>
                     </div>
 
-                    <div class="px-4 py-5">
+                    <!-- Scrollable Navigation Area (Hidden Scrollbar, Smooth Scroll) -->
+                    <div class="px-4 py-5 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <!-- Navigation Menu -->
                         <nav class="space-y-1 text-sm font-medium">
                             <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('dashboard') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
@@ -38,14 +62,12 @@
                                 <span>Dashboard</span>
                             </a>
 
-                            @if(Auth::user() && Auth::user()->hasRole('super_admin'))
-                                <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
-                                    <svg class="w-5 h-5 {{ request()->routeIs('pegawai.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
-                                    <span>Direktori Pegawai</span>
-                                </a>
-                            @endif
+                            <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <svg class="w-5 h-5 {{ request()->routeIs('pegawai.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                </svg>
+                                <span>Direktori Pegawai</span>
+                            </a>
 
                             <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -73,6 +95,10 @@
                             @endif
 
                             @if(Auth::user() && Auth::user()->hasRole('super_admin'))
+                                <div class="pt-3 pb-1">
+                                    <span class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-gray-400">PENGATURAN SYSTEM</span>
+                                </div>
+
                                 <a href="{{ route('master.desa') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.desa') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.desa') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 5h16" />
@@ -84,7 +110,7 @@
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.staf') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
-                                    <span>Staf Desa & Masyarakat</span>
+                                    <span>Staf Desa &amp; Masyarakat</span>
                                 </a>
 
                                 <a href="{{ route('master.jenis') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.jenis') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
@@ -106,23 +132,24 @@
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
                                     <span>Pengaturan User</span>
+                                </a>
                             @endif
                         </nav>
                     </div>
                 </div>
 
-                <!-- Sidebar Bottom CTA Button -->
-                <div class="p-4 border-t border-[#133256] space-y-2">
+                <!-- Sidebar Bottom Actions -->
+                <div class="p-4 border-t border-[#133256] space-y-2 bg-[#061D38] flex-shrink-0">
                     <a href="{{ route('documents.create') }}" class="w-full bg-[#F5BF38] hover:bg-[#E0AE2F] text-[#061D38] font-black py-2.5 px-4 rounded-xl shadow-sm transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer">
                         <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
-                        <span>Buat Dokumen Baru</span>
+                        <span>Buat Dokumen</span>
                     </a>
 
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <button type="submit" class="w-full text-left flex items-center gap-2.5 px-3 py-1.5 text-xs font-semibold uppercase text-rose-400 hover:text-rose-300 transition-all tracking-wider cursor-pointer mt-1">
+                        <button type="submit" class="w-full text-left flex items-center gap-2.5 px-3 py-2 text-xs font-bold uppercase text-rose-400 hover:text-rose-300 transition-all tracking-wider cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
@@ -133,105 +160,70 @@
             </aside>
 
             <!-- Main Right Workspace -->
-            <div class="flex-1 pl-64 flex flex-col min-h-screen">
+            <div class="flex-1 min-w-0 flex flex-col min-h-screen lg:pl-64 transition-all duration-300">
                 <!-- Top Navbar -->
-                <header class="bg-white border-b border-gray-200 sticky top-0 z-20 px-8 py-3.5 flex items-center justify-between shadow-xs">
-                    <!-- Left Breadcrumbs -->
+                <header class="bg-white border-b border-gray-200 sticky top-0 z-20 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
+                    <!-- Left Section: Hamburger Toggle & Breadcrumb -->
                     <div class="flex items-center gap-3">
-                        <button type="button" class="text-gray-500 hover:text-gray-700 cursor-pointer">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                        <button type="button" @click="sidebarOpen = !sidebarOpen" class="p-2 text-gray-600 hover:text-[#061D38] rounded-xl focus:outline-none lg:hidden cursor-pointer hover:bg-gray-100 transition-all">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path x-show="!sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
+                                <path x-show="sidebarOpen" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
-                            <span class="font-bold text-gray-900">Dashboard</span>
+
+                        <div class="flex items-center gap-2 text-xs sm:text-sm text-gray-500 font-medium">
+                            <span class="font-bold text-gray-900">ELDR</span>
                             <span class="text-gray-300">›</span>
-                            <span>
-                                @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
-                                    Antrian Review
-                                @elseif(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa')))
-                                    Dokumen Saya
+                            <span class="truncate">
+                                @if(request()->routeIs('dashboard'))
+                                    Dashboard
+                                @elseif(request()->routeIs('documents.*'))
+                                    Manajemen Dokumen
+                                @elseif(request()->routeIs('master.*'))
+                                    Data Master System
+                                @elseif(request()->routeIs('users.*'))
+                                    Manajemen Pengguna
+                                @elseif(request()->routeIs('pegawai.*'))
+                                    Direktori Pegawai
                                 @else
-                                    Ringkasan Sistem
+                                    Sistem ELDR
                                 @endif
                             </span>
                         </div>
                     </div>
 
                     <!-- Right Controls -->
-                    <div class="flex items-center gap-6">
-                        <!-- Search Bar -->
-                        <div class="relative w-72">
-                            <input type="text" placeholder="Cari dokumen..." class="w-full bg-[#F0F4F8] text-sm text-gray-700 placeholder-gray-400 rounded-xl pl-10 pr-4 py-2 border-0 focus:outline-none focus:ring-2 focus:ring-[#061D38]/20">
-                            <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </div>
-
-                        <!-- Notification Bell -->
-                        <button type="button" class="relative text-gray-500 hover:text-gray-700 cursor-pointer p-1.5 rounded-lg hover:bg-gray-100 transition-all">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                            </svg>
-                            <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white font-extrabold text-[10px] rounded-full flex items-center justify-center border border-white">5</span>
-                        </button>
-
-                        <div class="h-6 w-px bg-gray-200"></div>
-
-                        <!-- User Profile Widget & Interactive Dropdown -->
-                        <div class="relative" x-data="{ open: false }">
-                            <button @click="open = ! open" onclick="document.getElementById('profile-dropdown-box').classList.toggle('hidden')" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
-                                <div class="text-right">
-                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()?->name ?? 'Admin Hukum' }}</h4>
-                                    <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">
-                                        @if(Auth::user() && Auth::user()->hasRole('admin_hukum'))
-                                            ADMIN HUKUM
-                                        @elseif(Auth::user() && Auth::user()->hasRole('kabag_hukum'))
-                                            KABAG HUKUM
-                                        @elseif(Auth::user() && Auth::user()->hasRole('admin_opd'))
-                                            OPD PARIAMAN
-                                        @elseif(Auth::user() && Auth::user()->hasRole('admin_desa'))
-                                            DESA PARIAMAN
-                                        @else
-                                            ADMINISTRATOR
-                                        @endif
+                    <div class="flex items-center gap-3 sm:gap-6">
+                        <!-- User Profile Info -->
+                        @if(Auth::user())
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-[#062447] text-white flex items-center justify-center font-black text-xs">
+                                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                                </div>
+                                <div class="hidden sm:block text-left">
+                                    <span class="block text-xs font-extrabold text-[#061D38] leading-none">{{ Auth::user()->name }}</span>
+                                    <span class="text-[10px] font-bold text-gray-400 uppercase tracking-wider block mt-0.5">
+                                        {{ str_replace('_', ' ', Auth::user()->roles->first()?->name ?? 'User') }}
                                     </span>
                                 </div>
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()?->name ?? 'Admin Hukum') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
-                            </button>
-
-                            <!-- Profile Dropdown Menu -->
-                            <div id="profile-dropdown-box" x-show="open" @click.outside="open = false; document.getElementById('profile-dropdown-box').classList.add('hidden')"
-                                 class="hidden absolute right-0 mt-2 w-52 bg-white rounded-xl shadow-xl border border-gray-100 py-1.5 z-50">
-                                <div class="px-4 py-2 border-b border-gray-100">
-                                    <p class="text-[10px] uppercase font-bold text-gray-400 tracking-wider">Signed In As</p>
-                                    <p class="text-xs font-bold text-gray-900 truncate">{{ Auth::user()?->username ?? Auth::user()?->email ?? '-' }}</p>
-                                </div>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-                                    <button type="submit" class="w-full text-left px-4 py-2.5 text-xs font-bold text-rose-600 hover:bg-rose-50 flex items-center gap-2 cursor-pointer transition-all">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                                        </svg>
-                                        <span>Keluar (Logout)</span>
-                                    </button>
-                                </form>
                             </div>
-                        </div>
+                        @endif
                     </div>
                 </header>
 
-                <!-- Page Content -->
-                <main class="flex-1 p-8">
+                <!-- Page Main Body Container -->
+                <main class="flex-1 p-4 sm:p-6 lg:p-8">
                     {{ $slot }}
                 </main>
 
-                <!-- Dashboard Footer -->
-                <footer class="px-8 py-4 bg-white border-t border-gray-200 flex items-center justify-between text-xs text-gray-500 font-medium">
-                    <p>&copy; {{ date('Y') }} Dinas Komunikasi dan Informatika Kota Pariaman</p>
-                    <div class="flex items-center gap-6 text-gray-500">
-                        <a href="#" class="hover:text-gray-800 transition-all">Kebijakan Privasi</a>
-                        <a href="#" class="hover:text-gray-800 transition-all">Syarat & Ketentuan</a>
+                <!-- Footer -->
+                <footer class="bg-white border-t border-gray-200/80 px-4 sm:px-8 py-4 text-center text-xs font-semibold text-gray-400 flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <div>
+                        &copy; {{ date('Y') }} <span class="font-extrabold text-[#061D38]">ELDR Kota Pariaman</span>. Dinas Komunikasi dan Informatika.
+                    </div>
+                    <div class="text-[11px] font-mono text-gray-400">
+                        Electronic Legal Document Repository v2.0
                     </div>
                 </footer>
             </div>

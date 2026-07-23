@@ -20,7 +20,7 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: false);
     }
 }; ?>
 
@@ -62,7 +62,7 @@ new #[Layout('layouts.guest')] class extends Component
                 <x-input-error :messages="$errors->get('form.email')" class="mt-1 text-xs" />
             </div>
 
-            <!-- Password with Show/Hide toggle -->
+            <!-- Password with Eye Icon Toggle -->
             <div x-data="{ showPassword: false }">
                 <label for="password" class="flex items-center text-xs font-semibold text-gray-700 mb-1.5 gap-1.5">
                     <svg class="w-3.5 h-3.5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -71,10 +71,10 @@ new #[Layout('layouts.guest')] class extends Component
                     <span>Password</span>
                 </label>
                 <div class="relative">
-                    <input wire:model="form.password" id="password" :type="showPassword ? 'text' : 'password'" name="password" required
+                    <input wire:model="form.password" x-ref="pwdInput" id="password" type="password" name="password" required
                            placeholder="••••••••"
                            class="w-full px-3.5 py-2.5 pr-10 bg-[#F3F4F6] border border-gray-200 rounded-lg text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:bg-white focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
-                    <button type="button" @click="showPassword = !showPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">
+                    <button type="button" @click="showPassword = !showPassword; $refs.pwdInput.type = showPassword ? 'text' : 'password'" class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600 focus:outline-none cursor-pointer">
                         <svg x-show="!showPassword" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />

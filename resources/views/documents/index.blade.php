@@ -1,5 +1,22 @@
 <x-app-layout>
     <div class="space-y-6">
+        <!-- Tab Navigation Bar for Verifiers -->
+        @if(Auth::user() && Auth::user()->hasRole(['admin_hukum', 'kabag_hukum', 'super_admin']))
+            <div class="flex items-center gap-3 bg-white p-2.5 rounded-2xl shadow-xs border border-gray-100/80">
+                <a href="{{ route('documents.index') }}" class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 {{ empty($isApprovalTab) ? 'bg-[#062447] text-white shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                    </svg>
+                    <span>Repositori Seluruh Dokumen</span>
+                </a>
+                <a href="{{ route('documents.approvals') }}" class="px-5 py-2.5 rounded-xl text-xs font-extrabold transition-all flex items-center gap-2 {{ !empty($isApprovalTab) ? 'bg-[#062447] text-white shadow-sm' : 'bg-gray-50 text-gray-600 hover:bg-gray-100 border border-gray-200' }}">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span>Antrian Persetujuan Dokumen</span>
+                </a>
+            </div>
+        @endif
         <!-- 1. Top Row: 4 KPI Summary Cards -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             <!-- Total Dokumen -->

@@ -9,6 +9,7 @@ use App\Models\PengajuanDokumen;
 use App\Models\JenisDokumen;
 use App\Models\PerihalDokumen;
 use App\Models\StatusPengajuan;
+use App\Models\User;
 use App\Services\DocumentSubmissionService;
 use App\Services\SubjekService;
 use Illuminate\Support\Facades\Auth;
@@ -23,13 +24,39 @@ class DocumentController extends Controller
     }
 
     /**
-     * Halaman Daftar Dokumen dengan filter, pencarian, & paginasi
+     * Verifikasi kepemilikan dokumen untuk role admin_opd & admin_desa (IDOR protection)
+     */
+    private function isAuthorizedForDocument(User $user, int $dokumenId): bool
+    {
+        if ($user->hasRole(['admin_hukum', 'kabag_hukum', 'super_admin'])) {
+            return true;
+        }
+
+        if ($user->hasRole(['admin_opd', 'admin_desa'])) {
+            $subjekService = app(SubjekService::class);
+            $userSubjek = $subjekService->findOrCreateForUser($user);
+
+            $firstHistory = PengajuanDokumen::where('dokumen_id', $dokumenId)
+                ->orderBy('id_fact', 'asc')
+                ->first();
+
+            if ($firstHistory && $firstHistory->subjek_key !== $userSubjek->subjek_key) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Halaman Daftar Dokumen dengan filter, pencarian, & paginasi (Termasuk Tab Persetujuan)
      */
     public function index(Request $request)
     {
         $search = $request->input('search');
         $jenisKey = $request->input('jenis');
         $statusKey = $request->input('status');
+        $isApprovalTab = $request->routeIs('documents.approvals') || $request->input('tab') === 'approvals';
 
         // Role-based scoping to get latest thread IDs for user
         $user = Auth::user();
@@ -54,6 +81,12 @@ class DocumentController extends Controller
             'statusPengajuan'
         ])
         ->whereIn('id_fact', $latestIds);
+
+        if ($isApprovalTab) {
+            // Tab Persetujuan: Hanya tampilkan dokumen yang belum disetujui/selesai/dikembalikan
+            $query->whereNotIn('status_dokumen_key', [5, 6, 3])
+                  ->whereNotIn('status_pengajuan_key', [3, 4]);
+        }
 
         if ($search) {
             $query->where(function($q) use ($search) {
@@ -89,6 +122,7 @@ class DocumentController extends Controller
         })->count();
 
         return view('documents.index', [
+            'isApprovalTab' => $isApprovalTab,
             'documents' => $documents,
             'totalCount' => $totalCount,
             'disetujuiCount' => $disetujuiCount,
@@ -107,6 +141,16 @@ class DocumentController extends Controller
      */
     public function download($dokumenKey)
     {
+        $user = Auth::user();
+        if ($user && ($user->hasRole('admin_opd') || $user->hasRole('admin_desa'))) {
+            $fact = PengajuanDokumen::where('dokumen_key', $dokumenKey)->orderBy('id_fact', 'asc')->first();
+            if ($fact) {
+                if (!$this->isAuthorizedForDocument($user, (int)$fact->dokumen_id)) {
+                    abort(403, 'Anda tidak memiliki hak akses ke dokumen ini.');
+                }
+            }
+        }
+
         $dokumen = Dokumen::findOrFail($dokumenKey);
         
         $downloadName = $dokumen->dokumen_judul;
@@ -130,6 +174,11 @@ class DocumentController extends Controller
      */
     public function show($id)
     {
+        $user = Auth::user();
+        if ($user && !$this->isAuthorizedForDocument($user, (int)$id)) {
+            abort(403, 'Anda tidak memiliki hak akses ke dokumen ini.');
+        }
+
         $history = PengajuanDokumen::with([
             'subjek', 
             'dokumen', 
@@ -144,6 +193,28 @@ class DocumentController extends Controller
 
         if ($history->isEmpty()) {
             return view('documents.show', ['history' => null, 'latest' => null]);
+        }
+
+        // Bug 2: Sembunyikan catatan revisi Kabag Hukum dari OPD/Desa jika belum diteruskan oleh Admin Hukum
+        if ($user && ($user->hasRole('admin_opd') || $user->hasRole('admin_desa'))) {
+            $latestItem = $history->last();
+            if ($latestItem && $latestItem->status_dokumen_key == 3) {
+                $actorIsKabag = false;
+                if ($latestItem->subjek) {
+                    $actorIsKabag = User::where('subjek_key', $latestItem->subjek_key)
+                        ->get()
+                        ->contains(fn($u) => $u->hasRole('kabag_hukum'));
+                }
+                if (!$actorIsKabag && str_contains(strtolower($latestItem->keterangan ?? ''), 'kabag')) {
+                    $actorIsKabag = true;
+                }
+
+                if ($actorIsKabag) {
+                    $history = $history->reject(function($item) use ($latestItem) {
+                        return $item->id_fact == $latestItem->id_fact;
+                    })->values();
+                }
+            }
         }
 
         $latest = $history->last();
@@ -199,6 +270,11 @@ class DocumentController extends Controller
      */
     public function revisionForm($id = null)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasRole(['admin_hukum', 'kabag_hukum', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki hak akses ke halaman ini.');
+        }
+
         if (!$id) {
             $latestDoc = PengajuanDokumen::orderBy('id_fact', 'desc')->first();
             $id = $latestDoc ? $latestDoc->dokumen_id : 1;
@@ -218,6 +294,11 @@ class DocumentController extends Controller
      */
     public function submitRevision(Request $request, $dokumenId)
     {
+        $user = Auth::user();
+        if ($user && !$user->hasRole(['admin_hukum', 'kabag_hukum', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki hak akses untuk meminta revisi.');
+        }
+
         $catatan = $request->input('catatan_revisi') ?? $request->input('catatan') ?? 'Permintaan revisi oleh verifikator.';
 
         $request->validate([
@@ -234,15 +315,20 @@ class DocumentController extends Controller
             $fileObj->storeAs('documents', $fileRevisiName, 'public');
         }
 
-        $this->submissionService->requestRevision(
-            Auth::user(),
-            (int)$dokumenId,
-            $catatan,
-            $fileRevisiName
-        );
+        try {
+            $this->submissionService->requestRevision(
+                $user,
+                (int)$dokumenId,
+                $catatan,
+                $fileRevisiName
+            );
 
-        return redirect()->route('documents.show', ['id' => $dokumenId])
-            ->with('success', 'Permintaan revisi berhasil dikirim!');
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('success', 'Permintaan revisi berhasil dikirim!');
+        } catch (\Exception $e) {
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -250,11 +336,21 @@ class DocumentController extends Controller
      */
     public function forwardRevision(Request $request, $dokumenId)
     {
-        $catatanTambahan = $request->input('catatan_tambahan');
-        $this->submissionService->forwardRevisionToOpd(Auth::user(), (int)$dokumenId, $catatanTambahan);
+        $user = Auth::user();
+        if ($user && !$user->hasRole(['admin_hukum', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki hak akses untuk meneruskan revisi.');
+        }
 
-        return redirect()->route('documents.show', ['id' => $dokumenId])
-            ->with('success', 'Permintaan revisi dari Kabag Hukum berhasil diteruskan ke OPD/Desa!');
+        $catatanTambahan = $request->input('catatan_tambahan');
+        try {
+            $this->submissionService->forwardRevisionToOpd($user, (int)$dokumenId, $catatanTambahan);
+
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('success', 'Permintaan revisi dari Kabag Hukum berhasil diteruskan ke OPD/Desa!');
+        } catch (\Exception $e) {
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -263,16 +359,40 @@ class DocumentController extends Controller
     public function approve(Request $request, $dokumenId)
     {
         $user = Auth::user();
-        $catatan = $request->input('catatan', 'Disetujui');
-
-        if ($user->hasRole('kabag_hukum')) {
-            $this->submissionService->approveKabagHukum($user, (int)$dokumenId, $catatan);
-        } else {
-            $this->submissionService->approveAdminHukum($user, (int)$dokumenId, $catatan);
+        if ($user && !$user->hasRole(['admin_hukum', 'kabag_hukum', 'super_admin'])) {
+            abort(403, 'Anda tidak memiliki hak akses untuk menyetujui dokumen.');
         }
 
-        return redirect()->route('documents.show', ['id' => $dokumenId])
-            ->with('success', 'Persetujuan dokumen berhasil diproses!');
+        $catatan = $request->input('catatan', 'Disetujui');
+
+        $latest = PengajuanDokumen::where('dokumen_id', $dokumenId)
+            ->latest('id_fact')
+            ->first();
+
+        if (!$latest) {
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('error', 'Dokumen tidak ditemukan.');
+        }
+
+        try {
+            if ($user->hasRole('kabag_hukum')) {
+                $this->submissionService->approveKabagHukum($user, (int)$dokumenId, $catatan);
+            } else {
+                // Bug 5 Guard: Status dokumen harus 1 atau 2 (baru dikirim / dikirim ulang OPD)
+                if (!in_array($latest->status_dokumen_key, [1, 2])) {
+                    return redirect()->route('documents.show', ['id' => $dokumenId])
+                        ->with('error', 'Dokumen tidak dalam status yang dapat disetujui oleh Admin Hukum.');
+                }
+
+                $this->submissionService->approveAdminHukum($user, (int)$dokumenId, $catatan);
+            }
+
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('success', 'Persetujuan dokumen berhasil diproses!');
+        } catch (\Exception $e) {
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('error', $e->getMessage());
+        }
     }
 
     /**
@@ -311,6 +431,11 @@ class DocumentController extends Controller
      */
     public function resubmit(Request $request, $dokumenId)
     {
+        $user = Auth::user();
+        if ($user && !$this->isAuthorizedForDocument($user, (int)$dokumenId)) {
+            abort(403, 'Anda tidak memiliki hak akses ke dokumen ini.');
+        }
+
         $request->validate([
             'judul_file' => 'required|string|max:255',
             'file_dokumen' => 'required|file|mimes:doc,docx|max:20480', // Max 20MB doc/docx
@@ -321,15 +446,21 @@ class DocumentController extends Controller
         $filename = time() . '_resub_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
         $file->storeAs('documents', $filename, 'public');
 
-        $this->submissionService->resubmit(
-            Auth::user(),
-            (int)$dokumenId,
-            $request->input('judul_file'),
-            $filename,
-            $request->input('catatan')
-        );
+        try {
+            $this->submissionService->resubmit(
+                $user,
+                (int)$dokumenId,
+                $request->input('judul_file'),
+                $filename,
+                $request->input('catatan')
+            );
 
-        return redirect()->route('documents.show', ['id' => $dokumenId])
-            ->with('success', 'Berkas perbaikan berhasil dikirim ulang! Status dokumen kini diperbarui.');
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('success', 'Berkas perbaikan berhasil dikirim ulang! Status dokumen kini diperbarui.');
+        } catch (\Exception $e) {
+            return redirect()->route('documents.show', ['id' => $dokumenId])
+                ->with('error', $e->getMessage());
+        }
     }
 }
+
