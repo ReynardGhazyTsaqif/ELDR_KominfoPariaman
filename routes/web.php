@@ -32,6 +32,10 @@ Route::view('master/desa', 'master.desa')
     ->middleware(['auth', 'role:super_admin'])
     ->name('master.desa');
 
+Route::view('master/status', 'master.status')
+    ->middleware(['auth', 'role:super_admin'])
+    ->name('master.status');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
