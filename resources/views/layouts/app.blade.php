@@ -72,11 +72,11 @@
                                     <span>Riwayat</span>
                                 </a>
                             @else
-                                <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
-                                    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <a href="{{ route('master.desa') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.desa') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('master.desa') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 5h16" />
                                     </svg>
-                                    <span>Data Master</span>
+                                    <span>Data Desa (Master)</span>
                                 </a>
 
                                 <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">

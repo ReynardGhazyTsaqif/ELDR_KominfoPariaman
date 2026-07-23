@@ -28,6 +28,10 @@ Route::view('dokumen/persetujuan', 'documents.approvals')
     ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
     ->name('documents.approvals');
 
+Route::view('master/desa', 'master.desa')
+    ->middleware(['auth', 'role:super_admin'])
+    ->name('master.desa');
+
 Route::view('profile', 'profile')
     ->middleware(['auth'])
     ->name('profile');
