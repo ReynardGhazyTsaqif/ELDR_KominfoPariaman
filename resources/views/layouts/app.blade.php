@@ -45,7 +45,7 @@
                                 <span>Daftar Dokumen</span>
                             </a>
 
-                            @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa')))
+                            @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
                                 <a href="#" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-gray-300 hover:bg-[#123258]/60 hover:text-white transition-all">
                                     <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -128,7 +128,15 @@
                         <div class="flex items-center gap-2 text-sm text-gray-500 font-medium">
                             <span class="font-bold text-gray-900">Dashboard</span>
                             <span class="text-gray-300">›</span>
-                            <span>{{ Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa')) ? 'Dokumen Saya' : 'Ringkasan Sistem' }}</span>
+                            <span>
+                                @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
+                                    Antrian Review
+                                @elseif(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa')))
+                                    Dokumen Saya
+                                @else
+                                    Ringkasan Sistem
+                                @endif
+                            </span>
                         </div>
                     </div>
 
@@ -147,7 +155,7 @@
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
                             </svg>
-                            <span class="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+                            <span class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white font-extrabold text-[10px] rounded-full flex items-center justify-center border border-white">5</span>
                         </button>
 
                         <div class="h-6 w-px bg-gray-200"></div>
@@ -156,9 +164,13 @@
                         <div class="relative" x-data="{ dropdownOpen: false }">
                             <button @click="dropdownOpen = !dropdownOpen" type="button" class="flex items-center gap-3 cursor-pointer focus:outline-none select-none">
                                 <div class="text-right">
-                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Admin Kominfo' }}</h4>
+                                    <h4 class="text-xs font-bold text-gray-900 leading-none">{{ Auth::user()->name ?? 'Admin Hukum' }}</h4>
                                     <span class="text-[9px] font-extrabold text-gray-500 uppercase tracking-wider block mt-1">
-                                        @if(Auth::user() && Auth::user()->hasRole('admin_opd'))
+                                        @if(Auth::user() && Auth::user()->hasRole('admin_hukum'))
+                                            ADMIN HUKUM
+                                        @elseif(Auth::user() && Auth::user()->hasRole('kabag_hukum'))
+                                            KABAG HUKUM
+                                        @elseif(Auth::user() && Auth::user()->hasRole('admin_opd'))
                                             OPD PARIAMAN
                                         @elseif(Auth::user() && Auth::user()->hasRole('admin_desa'))
                                             DESA PARIAMAN
@@ -167,7 +179,7 @@
                                         @endif
                                     </span>
                                 </div>
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin Kominfo') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode(Auth::user()->name ?? 'Admin Hukum') }}&background=0A2540&color=fff" alt="Avatar" class="w-9 h-9 rounded-full object-cover ring-2 ring-gray-100">
                             </button>
 
                             <!-- Profile Dropdown Menu -->
