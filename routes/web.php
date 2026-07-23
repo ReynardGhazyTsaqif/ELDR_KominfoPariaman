@@ -12,6 +12,10 @@ Route::view('dokumen', 'documents.index')
     ->middleware(['auth'])
     ->name('documents.index');
 
+Route::view('dokumen/detail', 'documents.show')
+    ->middleware(['auth'])
+    ->name('documents.show');
+
 Route::view('dokumen/create', 'documents.create')
     ->middleware(['auth', 'role:admin_opd|admin_desa|super_admin'])
     ->name('documents.create');
