@@ -85,38 +85,22 @@
             </div>
         </div>
 
-        <!-- 2. Action Button Bar (4 Buttons) -->
+        <!-- 2. Combined Action Button Bar (2 Main Buttons) -->
         <div class="flex flex-wrap items-center gap-4">
-            <!-- Button 1: Setuju -->
+            <!-- Button 1: Setuju Dokumen -->
             <button type="button" class="px-6 py-3 bg-[#107C41] hover:bg-[#0B6233] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all cursor-pointer text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7" />
                 </svg>
-                <span>Setuju</span>
+                <span>Setuju Dokumen</span>
             </button>
 
-            <!-- Button 2: Setuju (Upload File) -->
-            <button type="button" class="px-6 py-3 bg-white border-2 border-[#107C41] text-[#107C41] hover:bg-emerald-50 font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Setuju (Upload File)</span>
-            </button>
-
-            <!-- Button 3: Revisi -->
+            <!-- Button 2: Minta Revisi -->
             <a href="{{ route('documents.revision') }}" class="px-6 py-3 bg-[#E67E22] hover:bg-[#D35400] text-white font-bold rounded-xl flex items-center gap-2 shadow-sm transition-all cursor-pointer text-sm">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                 </svg>
-                <span>Revisi</span>
-            </a>
-
-            <!-- Button 4: Revisi (Upload File) -->
-            <a href="{{ route('documents.revision') }}" class="px-6 py-3 bg-white border-2 border-[#E67E22] text-[#E67E22] hover:bg-orange-50 font-bold rounded-xl flex items-center gap-2 transition-all cursor-pointer text-sm">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-                <span>Revisi (Upload File)</span>
+                <span>Minta Revisi</span>
             </a>
         </div>
 
