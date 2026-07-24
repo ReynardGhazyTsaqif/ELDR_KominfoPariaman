@@ -67,14 +67,14 @@
                                 <span>Dashboard</span>
                             </a>
 
-                            <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
                                 <span>Daftar Dokumen</span>
                             </a>
 
-                            <a href="{{ route('documents.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('documents.create') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('documents.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.create') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.create') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                                 </svg>
@@ -82,7 +82,7 @@
                             </a>
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum') || Auth::user()->hasRole('super_admin')))
-                                <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('documents.approvals') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -90,21 +90,13 @@
                                 </a>
                             @endif
 
-                            <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-4 py-3 rounded-xl {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.history') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
                                 <span>Riwayat</span>
                             </a>
 
-                            @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
-                                <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
-                                    <svg class="w-5 h-5 {{ request()->routeIs('documents.history') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                    </svg>
-                                    <span>Riwayat</span>
-                                </a>
-                            @endif
 
                             @if(Auth::user() && Auth::user()->hasRole('super_admin'))
                                 <div class="pt-3 pb-1">
