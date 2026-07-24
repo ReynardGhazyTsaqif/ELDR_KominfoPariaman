@@ -56,12 +56,38 @@ new class extends Component
                             {{ __('Profile') }}
                         </x-dropdown-link>
 
-                        <!-- Authentication -->
-                        <button wire:click="logout" class="w-full text-start">
-                            <x-dropdown-link>
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </button>
+                        <!-- Authentication with Centered Modal Alert Validation -->
+                        <div x-data="{ confirmNavLogout: false }">
+                            <button type="button" @click="confirmNavLogout = true" class="w-full text-start px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center gap-2 cursor-pointer">
+                                <svg class="w-4 h-4 text-rose-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                </svg>
+                                <span>{{ __('Log Out') }}</span>
+                            </button>
+
+                            <!-- Navigation Centered Logout Modal Alert -->
+                            <template x-teleport="body">
+                                <div x-show="confirmNavLogout" 
+                                     x-cloak 
+                                     class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                                    <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs" @click="confirmNavLogout = false"></div>
+                                    <div class="relative bg-white dark:bg-gray-800 border-2 border-[#061D38] shadow-2xl p-6 w-full max-w-md z-10 text-center rounded-none">
+                                        <div class="mx-auto flex items-center justify-center h-14 w-14 bg-rose-100 border border-rose-300 text-rose-600 mb-4 rounded-none">
+                                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                                            </svg>
+                                        </div>
+                                        <h3 class="text-lg font-extrabold text-gray-900 dark:text-white uppercase">Konfirmasi Logout</h3>
+                                        <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">Apakah Anda yakin ingin keluar dari akun <span class="font-extrabold text-[#061D38]">ELDR Kota Pariaman</span>?</p>
+                                        <div class="mt-6 flex items-center justify-center gap-3">
+                                            <button type="button" @click="confirmNavLogout = false" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs uppercase tracking-wider border border-gray-300 rounded-none cursor-pointer">Batal</button>
+                                            <button type="button" wire:click="logout" class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs uppercase tracking-wider shadow-md rounded-none cursor-pointer">Ya, Keluar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </template>
+                        </div>
+
                     </x-slot>
                 </x-dropdown>
             </div>

@@ -15,7 +15,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-[#F4F6F9] text-gray-800 selection:bg-[#061D38] selection:text-white">
-        <div class="min-h-screen flex bg-[#F4F6F9]" x-data="{ sidebarOpen: false }">
+        <div class="min-h-screen flex bg-[#F4F6F9]" x-data="{ sidebarOpen: false, confirmLogout: false }">
             <!-- Mobile Backdrop Overlay -->
             <div x-show="sidebarOpen"
                  x-transition:enter="transition-opacity ease-linear duration-300"
@@ -55,21 +55,21 @@
                     <div class="px-4 py-5 flex-1 overflow-y-auto overflow-x-hidden [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
                         <!-- Navigation Menu -->
                         <nav class="space-y-1 text-sm font-medium">
-                            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('dashboard') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('dashboard') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('dashboard') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('dashboard') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
                                 </svg>
                                 <span>Dashboard</span>
                             </a>
 
-                            <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('pegawai.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('pegawai.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('pegawai.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
                                 <span>Direktori Pegawai</span>
                             </a>
 
-                            <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                            <a href="{{ route('documents.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('documents.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                 <svg class="w-5 h-5 {{ request()->routeIs('documents.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                 </svg>
@@ -77,7 +77,7 @@
                             </a>
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum') || Auth::user()->hasRole('super_admin')))
-                                <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('documents.approvals') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -86,7 +86,7 @@
                             @endif
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum')))
-                                <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('documents.history') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('documents.history') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('documents.history') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
@@ -99,35 +99,35 @@
                                     <span class="px-3.5 text-[10px] font-extrabold uppercase tracking-wider text-gray-400">PENGATURAN SYSTEM</span>
                                 </div>
 
-                                <a href="{{ route('master.desa') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.desa') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('master.desa') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('master.desa') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.desa') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1.5 3 3.5 3h9c2 0 3.5-1 3.5-3V7c0-2-1.5-3-3.5-3h-9C5.5 4 4 5 4 7zm0 5h16" />
                                     </svg>
                                     <span>Data Desa (Master)</span>
                                 </a>
 
-                                <a href="{{ route('master.staf') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.staf') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('master.staf') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('master.staf') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.staf') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
                                     <span>Staf Desa &amp; Masyarakat</span>
                                 </a>
 
-                                <a href="{{ route('master.jenis') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.jenis') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('master.jenis') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('master.jenis') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.jenis') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V7.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 1H7a2 2 0 00-2 2v16a2 2 0 002 2z" />
                                     </svg>
                                     <span>Jenis Dokumen (Master)</span>
                                 </a>
 
-                                <a href="{{ route('master.status') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('master.status') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('master.status') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('master.status') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('master.status') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10M7 12h10m-8 5h8" />
                                     </svg>
                                     <span>Referensi Status</span>
                                 </a>
 
-                                <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-xl {{ request()->routeIs('users.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                <a href="{{ route('users.index') }}" class="flex items-center gap-3 px-3.5 py-2.5 rounded-none {{ request()->routeIs('users.index') ? 'bg-[#123258] text-white shadow-sm font-semibold' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
                                     <svg class="w-5 h-5 {{ request()->routeIs('users.index') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                                     </svg>
@@ -140,16 +140,16 @@
 
                 <!-- Sidebar Bottom Actions -->
                 <div class="p-4 border-t border-[#133256] space-y-2 bg-[#061D38] flex-shrink-0">
-                    <a href="{{ route('documents.create') }}" class="w-full bg-[#F5BF38] hover:bg-[#E0AE2F] text-[#061D38] font-black py-2.5 px-4 rounded-xl shadow-sm transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer">
+                    <a href="{{ route('documents.create') }}" class="w-full bg-[#F5BF38] hover:bg-[#E0AE2F] text-[#061D38] font-black py-2.5 px-4 rounded-none shadow-sm transition-all text-xs tracking-wider uppercase flex items-center justify-center gap-2 cursor-pointer">
                         <svg class="w-4 h-4 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                         </svg>
                         <span>Buat Dokumen</span>
                     </a>
 
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form method="POST" action="{{ route('logout') }}" id="logout-form">
                         @csrf
-                        <button type="submit" class="w-full text-left flex items-center gap-2.5 px-3 py-2 text-xs font-bold uppercase text-rose-400 hover:text-rose-300 transition-all tracking-wider cursor-pointer">
+                        <button type="button" @click="confirmLogout = true" class="w-full text-left flex items-center gap-2.5 px-3 py-2 text-xs font-bold uppercase text-rose-400 hover:text-rose-300 transition-all tracking-wider cursor-pointer">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
                             </svg>
@@ -165,7 +165,7 @@
                 <header class="bg-white border-b border-gray-200 sticky top-0 z-20 px-4 sm:px-8 py-3.5 flex items-center justify-between shadow-xs">
                     <!-- Left Section: Hamburger Toggle & Breadcrumb -->
                     <div class="flex items-center gap-3">
-                        <button type="button" @click="sidebarOpen = !sidebarOpen" class="p-2 text-gray-600 hover:text-[#061D38] rounded-xl focus:outline-none lg:hidden cursor-pointer hover:bg-gray-100 transition-all">
+                        <button type="button" @click="sidebarOpen = !sidebarOpen" class="p-2 text-gray-600 hover:text-[#061D38] rounded-none focus:outline-none lg:hidden cursor-pointer hover:bg-gray-100 transition-all">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path x-show="!sidebarOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 6h16M4 12h16M4 18h16" />
                                 <path x-show="sidebarOpen" x-cloak stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12" />
@@ -198,7 +198,7 @@
                         <!-- User Profile Info -->
                         @if(Auth::user())
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-full bg-[#062447] text-white flex items-center justify-center font-black text-xs">
+                                <div class="w-8 h-8 rounded-none bg-[#062447] text-white flex items-center justify-center font-black text-xs">
                                     {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                 </div>
                                 <div class="hidden sm:block text-left">
@@ -227,6 +227,53 @@
                     </div>
                 </footer>
             </div>
+
+            <!-- Logout Confirmation Modal Alert (Centered & Formal Square) -->
+            <div x-show="confirmLogout"
+                 x-transition:enter="ease-out duration-300"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="ease-in duration-200"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 x-cloak
+                 class="fixed inset-0 z-50 flex items-center justify-center p-4">
+                
+                <!-- Modal Backdrop Overlay -->
+                <div class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs" @click="confirmLogout = false"></div>
+
+                <!-- Centered Alert Modal Card (Square Formal Design) -->
+                <div class="relative bg-white dark:bg-gray-800 border-2 border-[#061D38] dark:border-gray-600 shadow-2xl p-6 w-full max-w-md z-10 text-center rounded-none transform transition-all">
+                    <!-- Warning Icon -->
+                    <div class="mx-auto flex items-center justify-center h-14 w-14 bg-rose-100 border border-rose-300 text-rose-600 mb-4 rounded-none">
+                        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                        </svg>
+                    </div>
+
+                    <h3 class="text-lg font-extrabold text-gray-900 dark:text-white tracking-tight uppercase">
+                        Konfirmasi Logout
+                    </h3>
+                    <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                        Apakah Anda yakin ingin keluar dari akun <span class="font-extrabold text-[#061D38] dark:text-blue-400">ELDR Kota Pariaman</span>?
+                    </p>
+
+                    <!-- Modal Action Buttons -->
+                    <div class="mt-6 flex items-center justify-center gap-3">
+                        <button type="button" 
+                                @click="confirmLogout = false" 
+                                class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs uppercase tracking-wider border border-gray-300 transition-all rounded-none cursor-pointer">
+                            Batal
+                        </button>
+                        <button type="button" 
+                                @click="document.getElementById('logout-form').submit()" 
+                                class="px-5 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs uppercase tracking-wider shadow-md transition-all rounded-none cursor-pointer">
+                            Ya, Keluar
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
+
