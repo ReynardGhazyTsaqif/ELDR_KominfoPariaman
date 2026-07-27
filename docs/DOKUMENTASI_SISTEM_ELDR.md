@@ -245,4 +245,22 @@ php artisan test --filter=PerformanceQueryCountTest
    ```
 
 ---
+
+## 10. REFERENSI DATA & STANDAR KODE WILAYAH
+
+Data master wilayah (Desa / Kelurahan Se-Kota Pariaman) pada tabel `d_desa` menggunakan pengkodean standar pemerintah berdasarkan **Keputusan Menteri Dalam Negeri (Kepmendagri) 2025**.
+
+### Rujukan & Sumber Dataset:
+- **Repository Referensi**: [yonatanyl/KODE-WILAYAH-KEPMENDAGRI-2025](https://github.com/yonatanyl/KODE-WILAYAH-KEPMENDAGRI-2025)
+- **Struktur Kode Wilayah Kota Pariaman (13.77 / 1377)**:
+  - **Provinsi**: `13` (Sumatera Barat)
+  - **Kota**: `13.77` / `1377` (Kota Pariaman)
+  - **Kecamatan**:
+    - `13.77.01` (Pariaman Tengah)
+    - `13.77.02` (Pariaman Utara)
+    - `13.77.03` (Pariaman Selatan)
+    - `13.77.04` (Pariaman Timur)
+  - **Desa / Kelurahan**: Format kode 10 digit (contoh: `1377012001`, `1377022001`, dsb.)
+
+---
 *Dokumentasi ini disusun secara otomatis berdasarkan inspeksi kode sumber dan pengujian terverifikasi pada aplikasi ELDR Kota Pariaman.*

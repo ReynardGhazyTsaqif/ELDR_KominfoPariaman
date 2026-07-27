@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
         $subjekService->findOrCreateForUser($adminOpd);
 
         // 3. Admin Desa
-        $desa = Desa::firstOrCreate(['desa_nama' => 'Desa Pariaman Utara']);
+        $desa = Desa::where('desa_kode', '1377022001')->first() ?? Desa::firstOrCreate(['desa_kode' => '1377022001', 'desa_nama' => 'Desa Ampalu']);
         $masyarakat = Masyarakat::firstOrCreate(
             ['nik' => '1371010101900001'],
             ['nama_masyarakat' => 'Staf Desa Pariaman Utara']
