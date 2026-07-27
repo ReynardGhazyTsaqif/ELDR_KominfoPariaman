@@ -74,12 +74,14 @@
                                 <span>Daftar Dokumen</span>
                             </a>
 
-                            <a href="{{ route('documents.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.create') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
-                                <svg class="w-5 h-5 {{ request()->routeIs('documents.create') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                                </svg>
-                                <span>Penyusunan</span>
-                            </a>
+                            @if(Auth::user() && (Auth::user()->hasRole('admin_opd') || Auth::user()->hasRole('admin_desa') || Auth::user()->hasRole('super_admin')))
+                                <a href="{{ route('documents.create') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.create') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
+                                    <svg class="w-5 h-5 {{ request()->routeIs('documents.create') ? 'text-white' : 'text-gray-400' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
+                                    <span>Penyusunan</span>
+                                </a>
+                            @endif
 
                             @if(Auth::user() && (Auth::user()->hasRole('admin_hukum') || Auth::user()->hasRole('kabag_hukum') || Auth::user()->hasRole('super_admin')))
                                 <a href="{{ route('documents.approvals') }}" class="flex items-center gap-3 px-4 py-3 rounded-none {{ request()->routeIs('documents.approvals') ? 'bg-[#123258] text-white font-bold shadow-xs' : 'text-gray-300 hover:bg-[#123258]/60 hover:text-white' }} transition-all">
@@ -238,7 +240,7 @@
                 <!-- Footer -->
                 <footer class="bg-white border-t border-gray-200/80 px-8 py-4 text-xs font-semibold text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-3">
                     <div>
-                        &copy; 2023 <span class="font-bold text-[#062447]">Dinas Komunikasi dan Informatika Kota Pariaman</span>
+                        &copy; 2026 <span class="font-bold text-[#062447]">Dinas Komunikasi dan Informatika Kota Pariaman</span>
                     </div>
                     <div class="flex items-center gap-4 text-gray-500 font-medium">
                         <a href="#" class="hover:text-[#062447] transition-all">Kebijakan Privasi</a>

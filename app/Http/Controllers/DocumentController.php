@@ -83,9 +83,19 @@ class DocumentController extends Controller
         ->whereIn('id_fact', $latestIds);
 
         if ($isApprovalTab) {
-            // Tab Persetujuan: Hanya tampilkan dokumen yang belum disetujui/selesai/dikembalikan
-            $query->whereNotIn('status_dokumen_key', [5, 6, 3])
-                  ->whereNotIn('status_pengajuan_key', [3, 4]);
+            if ($user && $user->hasRole('kabag_hukum')) {
+                // Kabag Hukum: Khusus dokumen disetujui Admin Hukum (ST05 = 5) yang menunggu ACC Final
+                $query->where('status_dokumen_key', 5);
+            } elseif ($user && $user->hasRole('admin_hukum')) {
+                // Admin Hukum: Khusus dokumen masuk awal (ST01 = 1) atau terkirim diperbaiki (ST02 = 2)
+                $query->whereIn('status_dokumen_key', [1, 2]);
+            } elseif ($user && ($user->hasRole('admin_opd') || $user->hasRole('admin_desa'))) {
+                // OPD / Desa: Khusus dokumen yang membutuhkan tindakan perbaikan revisi (ST03 = 3, ST04 = 4)
+                $query->whereIn('status_dokumen_key', [3, 4]);
+            } else {
+                // Super Admin / Default: Seluruh berkas pending (ST01, ST02, ST05)
+                $query->whereIn('status_dokumen_key', [1, 2, 5]);
+            }
         }
 
         if ($search) {
@@ -153,17 +163,23 @@ class DocumentController extends Controller
 
         $dokumen = Dokumen::findOrFail($dokumenKey);
         
-        $downloadName = $dokumen->dokumen_judul;
         $ext = pathinfo($dokumen->nama_file, PATHINFO_EXTENSION);
-        if ($ext && !str_ends_with(strtolower($downloadName), '.' . strtolower($ext))) {
-            $downloadName .= '.' . $ext;
+        $cleanTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $dokumen->dokumen_judul);
+        $downloadName = $cleanTitle . '_v' . $dokumen->dokumen_key . ($ext ? '.' . $ext : '');
+
+        $filePath = null;
+        if (Storage::disk('public')->exists('documents/' . $dokumen->nama_file)) {
+            $filePath = Storage::disk('public')->path('documents/' . $dokumen->nama_file);
+        } elseif (Storage::exists('documents/' . $dokumen->nama_file)) {
+            $filePath = Storage::path('documents/' . $dokumen->nama_file);
         }
 
-        // Check disk storage path
-        if (Storage::disk('public')->exists('documents/' . $dokumen->nama_file)) {
-            return Storage::disk('public')->download('documents/' . $dokumen->nama_file, $downloadName);
-        } elseif (Storage::exists('documents/' . $dokumen->nama_file)) {
-            return Storage::download('documents/' . $dokumen->nama_file, $downloadName);
+        if ($filePath && file_exists($filePath)) {
+            return response()->download($filePath, $downloadName, [
+                'Cache-Control' => 'no-cache, no-store, must-revalidate',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+            ]);
         }
 
         return back()->with('error', 'Berkas fisik tidak ditemukan di storage.');
@@ -280,7 +296,7 @@ class DocumentController extends Controller
             $id = $latestDoc ? $latestDoc->dokumen_id : 1;
         }
 
-        $history = PengajuanDokumen::with(['dokumen'])->where('dokumen_id', $id)->first();
+        $history = PengajuanDokumen::with(['dokumen'])->where('dokumen_id', $id)->orderBy('id_fact', 'desc')->first();
         $dokumen = $history ? $history->dokumen : Dokumen::find($id);
 
         return view('documents.revision', [
@@ -418,7 +434,7 @@ class DocumentController extends Controller
             $query->whereIn('dokumen_id', $opdDokumenIds);
         }
 
-        $historyList = $query->orderBy('id_fact', 'desc')->paginate(15);
+        $historyList = $query->orderBy('id_fact', 'desc')->paginate(10);
 
         return view('documents.history', [
             'historyList' => $historyList,

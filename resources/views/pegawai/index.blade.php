@@ -148,9 +148,19 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                {{ $pegawais->links() }}
-            </div>
+            @if(isset($pegawais) && $pegawais->count() > 0)
+                <div class="px-6 py-4 bg-gray-50/60 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-gray-500">
+                    @if($pegawais->hasPages())
+                        <div class="w-full">
+                            {{ $pegawais->links() }}
+                        </div>
+                    @else
+                        <div>
+                            Menampilkan <span class="font-extrabold text-gray-800">{{ $pegawais->firstItem() ?? 1 }}</span>–<span class="font-extrabold text-gray-800">{{ $pegawais->lastItem() ?? $pegawais->count() }}</span> dari <span class="font-extrabold text-gray-800">{{ $pegawais->total() }}</span> total pegawai
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Detail Pegawai Modal -->

@@ -41,6 +41,31 @@
                 'total' => $docsOfJenis->count(),
             ];
         });
+
+        // 5 Aktivitas Fact Log Terakhir (Real-time Audit Trail)
+        $recentActivities = \App\Models\PengajuanDokumen::with([
+            'subjek', 'dokumen', 'jenisDokumen', 'statusDokumen'
+        ])->orderBy('id_fact', 'desc')->take(5)->get();
+
+        // Kinerja Review Minggu Ini (Senin - Minggu)
+        $startOfWeek = \Carbon\Carbon::now()->startOfWeek();
+        $weeklyPerformance = collect();
+        $days = ['SEN', 'SEL', 'RAB', 'KAM', 'JUM', 'SAB', 'MIN'];
+
+        for ($i = 0; $i < 7; $i++) {
+            $dayDate = $startOfWeek->copy()->addDays($i);
+            $count = \App\Models\PengajuanDokumen::whereDate('created_at', $dayDate->toDateString())->count();
+            $weeklyPerformance->push((object)[
+                'day' => $days[$i],
+                'date' => $dayDate->format('d M'),
+                'count' => $count,
+                'isToday' => $dayDate->isToday(),
+            ]);
+        }
+
+        $totalWeekReviewed = $weeklyPerformance->sum('count');
+        $maxDailyCount = max($weeklyPerformance->max('count'), 1);
+        $busiestDay = $weeklyPerformance->sortByDesc('count')->first();
     @endphp
 
     @if($user && ($user->hasRole('admin_opd') || $user->hasRole('admin_desa')))

@@ -60,8 +60,8 @@
         <!-- Page Header & CTA Row -->
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
-                <h2 class="text-2xl font-black text-[#061D38] tracking-tight">Master Data Desa (Tabel Dimensi d_desa)</h2>
-                <p class="text-xs font-semibold text-gray-500 mt-1">Kelola data desa resmi Se-Kota Pariaman yang terhubung ke dalam struktur Star Schema ELDR.</p>
+                <h2 class="text-2xl font-black text-[#061D38] tracking-tight">Master Data Desa</h2>
+                <p class="text-xs font-semibold text-gray-500 mt-1">Kelola data desa resmi Se-Kota Pariaman.</p>
             </div>
             <button @click="isEdit = false; modalTitle = 'Tambah Desa Baru'; form = { desa_kode: '', desa_nama: '' }; showModal = true"
                     type="button"
@@ -69,18 +69,18 @@
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                <span>+ Tambah Desa</span>
+                <span>Tambah Desa</span>
             </button>
         </div>
 
-        <!-- 1. KPI Summary Card -->
+        <!-- 1. KPI Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">TOTAL DESA TERDAFTAR</h4>
                     <p class="text-3xl font-black text-[#061D38] mt-1 tracking-tight">{{ number_format($totalDesa) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0 border border-blue-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
@@ -90,9 +90,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DESA AKTIF</h4>
-                    <p class="text-3xl font-black text-emerald-600 mt-1 tracking-tight">{{ number_format($activeDesa) }}</p>
+                    <p class="text-3xl font-black text-emerald-700 mt-1 tracking-tight">{{ number_format($activeDesa) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0 border border-emerald-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -102,9 +102,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DESA NONAKTIF</h4>
-                    <p class="text-3xl font-black text-rose-600 mt-1 tracking-tight">{{ number_format($inactiveDesa) }}</p>
+                    <p class="text-3xl font-black text-slate-600 mt-1 tracking-tight">{{ number_format($inactiveDesa) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0 border border-slate-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
@@ -112,28 +112,31 @@
             </div>
         </div>
 
-        <!-- 2. Search Bar -->
+        <!-- 2. Search Bar (Live Instant Search As You Type) -->
         <div class="bg-white rounded-2xl p-4 shadow-xs border border-gray-100/80">
-            <form method="GET" action="{{ route('master.desa') }}" class="flex flex-col sm:flex-row items-center justify-between gap-4">
-                <div class="relative flex-1 w-full">
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari kode desa atau nama desa..."
-                           class="w-full px-4 py-2.5 pl-10 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447]">
+            <form method="GET" action="{{ route('master.desa') }}" class="w-full">
+                <div class="relative w-full">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ $search ?? '' }}" 
+                           placeholder="Ketik kode atau nama desa untuk mencari..."
+                           @input.debounce.350ms="$el.form.submit()"
+                           class="w-full px-4 py-2.5 pl-10 pr-24 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-1 focus:ring-[#062447] font-medium transition-all">
                     <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                </div>
-
-                <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <button type="submit" class="px-5 py-2.5 bg-[#062447] text-white font-bold text-xs rounded-xl hover:bg-[#0A3363] transition-all">Filter</button>
                     @if($search)
-                        <a href="{{ route('master.desa') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-all">Reset</a>
+                        <a href="{{ route('master.desa') }}" class="absolute right-3 top-2 px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+                            <span>Reset</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </a>
                     @endif
                 </div>
             </form>
         </div>
 
         <!-- Table Card Container -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -154,18 +157,18 @@
                                 <td class="py-4 px-6 font-extrabold text-[#061D38]">
                                     {{ $d->desa_nama }}
                                 </td>
-                                <td class="py-4 px-4 text-center">
+                                <td class="py-4 px-4 text-center whitespace-nowrap">
                                     @if($d->f_status === '1')
-                                        <span class="inline-block bg-emerald-50 text-emerald-600 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
+                                        <span class="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
                                     @else
-                                        <span class="inline-block bg-rose-50 text-rose-600 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif</span>
+                                        <span class="inline-block bg-slate-100 text-slate-600 border border-slate-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-6 text-center">
+                                <td class="py-4 px-6 text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button"
                                                 @click="isEdit = true; editUrl = '{{ route('master.desa.update', ['id' => $d->desa_key]) }}'; modalTitle = 'Edit Desa: {{ addslashes($d->desa_nama) }}'; form = { desa_kode: '{{ addslashes($d->desa_kode) }}', desa_nama: '{{ addslashes($d->desa_nama) }}' }; showModal = true"
-                                                class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition-all">
+                                                class="px-3 py-1.5 bg-blue-50 hover:bg-[#062447] text-[#062447] hover:text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                             Edit
                                         </button>
 
@@ -173,7 +176,7 @@
                                             @csrf
                                             <button type="button"
                                                     @click="triggerConfirm('Konfirmasi Ubah Status Desa', 'Apakah Anda yakin ingin mengubah status aktif desa {{ addslashes($d->desa_nama) }}?', $el.closest('form'))"
-                                                    class="px-3 py-1.5 {{ $d->f_status === '1' ? 'bg-amber-50 hover:bg-amber-100 text-amber-700' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700' }} font-bold rounded-lg text-xs transition-all cursor-pointer">
+                                                    class="px-3 py-1.5 {{ $d->f_status === '1' ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800' }} font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                                 {{ $d->f_status === '1' ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>
@@ -183,7 +186,7 @@
                                             @method('DELETE')
                                             <button type="button"
                                                     @click="triggerConfirm('Konfirmasi Hapus Desa', 'Apakah Anda yakin ingin menghapus data desa {{ addslashes($d->desa_nama) }}? Tindakan ini tidak dapat dibatalkan.', $el.closest('form'))"
-                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all cursor-pointer">
+                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                                 Hapus
                                             </button>
                                         </form>
@@ -200,9 +203,19 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                {{ $desas->links() }}
-            </div>
+            @if(isset($desas) && $desas->count() > 0)
+                <div class="px-6 py-4 bg-gray-50/60 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-gray-500">
+                    @if($desas->hasPages())
+                        <div class="w-full">
+                            {{ $desas->links() }}
+                        </div>
+                    @else
+                        <div>
+                            Menampilkan <span class="font-extrabold text-gray-800">{{ $desas->firstItem() ?? 1 }}</span>–<span class="font-extrabold text-gray-800">{{ $desas->lastItem() ?? $desas->count() }}</span> dari <span class="font-extrabold text-gray-800">{{ $desas->total() }}</span> total desa/kelurahan
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Modal Form Create / Edit Desa -->
@@ -230,8 +243,12 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs">Batal</button>
-                        <button type="submit" class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md">Simpan Desa</button>
+                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs cursor-pointer">Batal</button>
+                        <button type="button"
+                                @click="showModal = false; triggerConfirm(isEdit ? 'Konfirmasi Perbarui Data Desa' : 'Konfirmasi Simpan Desa Baru', 'Apakah Anda yakin ingin menyimpan perubahan data desa ini?', $el.closest('form'))"
+                                class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer">
+                            Simpan Desa
+                        </button>
                     </div>
                 </form>
             </div>

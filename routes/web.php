@@ -54,6 +54,18 @@ Route::post('dokumen/approve/{dokumenId}', [DocumentController::class, 'approve'
     ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
     ->name('documents.approve');
 
+Route::post('dokumen/approve-admin/{dokumenId}', [DocumentController::class, 'approve'])
+    ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
+    ->name('documents.approveByAdminHukum');
+
+Route::post('dokumen/approve-kabag/{dokumenId}', [DocumentController::class, 'approve'])
+    ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
+    ->name('documents.approveByKabag');
+
+Route::post('dokumen/teruskan-revisi-opd/{dokumenId}', [DocumentController::class, 'forwardRevision'])
+    ->middleware(['auth', 'role:admin_hukum|super_admin'])
+    ->name('documents.forwardRevisionToOpd');
+
 Route::get('dokumen/persetujuan', [DocumentController::class, 'index'])
     ->middleware(['auth', 'role:admin_hukum|kabag_hukum|super_admin'])
     ->name('documents.approvals');

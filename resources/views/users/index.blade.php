@@ -69,7 +69,7 @@
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                <span>+ Tambah User</span>
+                <span>Tambah User</span>
             </button>
         </div>
 
@@ -80,7 +80,7 @@
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">TOTAL USER TERDAFTAR</h4>
                     <p class="text-3xl font-black text-[#061D38] mt-1 tracking-tight">{{ number_format($totalUsers) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0 border border-blue-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                     </svg>
@@ -90,9 +90,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">AKUN AKTIF</h4>
-                    <p class="text-3xl font-black text-emerald-600 mt-1 tracking-tight">{{ number_format($activeUsers) }}</p>
+                    <p class="text-3xl font-black text-emerald-700 mt-1 tracking-tight">{{ number_format($activeUsers) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0 border border-emerald-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -102,9 +102,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">AKUN NONAKTIF</h4>
-                    <p class="text-3xl font-black text-rose-600 mt-1 tracking-tight">{{ number_format($inactiveUsers) }}</p>
+                    <p class="text-3xl font-black text-slate-600 mt-1 tracking-tight">{{ number_format($inactiveUsers) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-slate-600 flex items-center justify-center flex-shrink-0 border border-slate-200">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
                     </svg>
@@ -114,9 +114,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">PERANAN (ROLES)</h4>
-                    <p class="text-3xl font-black text-purple-600 mt-1 tracking-tight">{{ number_format($roles->count()) }}</p>
+                    <p class="text-3xl font-black text-[#062447] mt-1 tracking-tight">{{ number_format($roles->count()) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0 border border-blue-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                     </svg>
@@ -124,19 +124,29 @@
             </div>
         </div>
 
-        <!-- 2. Search & Filter Bar -->
+        <!-- 2. Search & Filter Bar (Live Instant Search As You Type) -->
         <div class="bg-white rounded-2xl p-4 shadow-xs border border-gray-100/80">
             <form method="GET" action="{{ route('users.index') }}" class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="relative flex-1 w-full">
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari NIP / Username / Nama / Email..."
-                           class="w-full px-4 py-2.5 pl-10 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447]">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ $search ?? '' }}" 
+                           placeholder="Ketik NIP / Username / Nama / Email untuk mencari..."
+                           @input.debounce.350ms="$el.form.submit()"
+                           class="w-full px-4 py-2.5 pl-10 pr-24 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-1 focus:ring-[#062447] font-medium transition-all">
                     <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
+                    @if($search)
+                        <a href="{{ route('users.index') }}" class="absolute right-3 top-2 px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+                            <span>Reset</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </a>
+                    @endif
                 </div>
 
                 <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <select name="role" class="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none cursor-pointer">
+                    <select name="role" @change="$el.form.submit()" class="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 font-semibold focus:outline-none focus:border-[#062447] cursor-pointer">
                         <option value="">Semua Role</option>
                         @foreach($roles as $r)
                             <option value="{{ $r->name }}" {{ ($roleFilter ?? '') == $r->name ? 'selected' : '' }}>
@@ -145,16 +155,15 @@
                         @endforeach
                     </select>
 
-                    <button type="submit" class="px-5 py-2.5 bg-[#062447] text-white font-bold text-xs rounded-xl hover:bg-[#0A3363] transition-all">Filter</button>
                     @if($search || $roleFilter)
-                        <a href="{{ route('users.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-all">Reset</a>
+                        <a href="{{ route('users.index') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-all cursor-pointer whitespace-nowrap">Reset Filter</a>
                     @endif
                 </div>
             </form>
         </div>
 
         <!-- Table Card Container -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -179,23 +188,23 @@
                                     <span class="block font-extrabold text-[#061D38]">{{ $u->name }}</span>
                                     <span class="text-xs text-gray-400 font-normal block">{{ $u->email }}</span>
                                 </td>
-                                <td class="py-4 px-6">
+                                <td class="py-4 px-6 whitespace-nowrap">
                                     <span class="inline-block bg-blue-50 text-[#062447] text-xs font-bold px-2.5 py-1 rounded-lg border border-blue-100">
-                                        {{ str_replace('_', ' ', $roleName) }}
+                                        {{ str_replace('_', ' ', strtoupper($roleName)) }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4 text-center">
+                                <td class="py-4 px-4 text-center whitespace-nowrap">
                                     @if($u->is_active)
-                                        <span class="inline-block bg-emerald-50 text-emerald-600 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
+                                        <span class="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
                                     @else
-                                        <span class="inline-block bg-rose-50 text-rose-600 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif</span>
+                                        <span class="inline-block bg-slate-100 text-slate-600 border border-slate-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-6 text-center">
+                                <td class="py-4 px-6 text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button"
                                                 @click="isEdit = true; editUrl = '{{ route('users.update', ['id' => $u->id]) }}'; modalTitle = 'Edit User: {{ addslashes($u->name) }}'; form = { name: '{{ addslashes($u->name) }}', username: '{{ addslashes($u->username) }}', email: '{{ addslashes($u->email) }}', password: '', role: '{{ $roleName }}', tipe_login: '{{ $u->tipe_login }}' }; showModal = true"
-                                                class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition-all">
+                                                class="px-3 py-1.5 bg-blue-50 hover:bg-[#062447] text-[#062447] hover:text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                             Edit
                                         </button>
 
@@ -203,7 +212,7 @@
                                             @csrf
                                             <button type="button"
                                                     @click="triggerConfirm('Konfirmasi Ubah Status', 'Apakah Anda yakin ingin mengubah status aktif user {{ addslashes($u->name) }}?', $el.closest('form'))"
-                                                    class="px-3 py-1.5 {{ $u->is_active ? 'bg-amber-50 hover:bg-amber-100 text-amber-700' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-700' }} font-bold rounded-lg text-xs transition-all cursor-pointer">
+                                                    class="px-3 py-1.5 {{ $u->is_active ? 'bg-slate-100 hover:bg-slate-200 text-slate-700' : 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800' }} font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                                 {{ $u->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
                                             </button>
                                         </form>
@@ -213,7 +222,7 @@
                                             @method('DELETE')
                                             <button type="button"
                                                     @click="triggerConfirm('Konfirmasi Hapus User', 'Apakah Anda yakin ingin menghapus data user {{ addslashes($u->name) }}? Tindakan ini tidak dapat dibatalkan.', $el.closest('form'))"
-                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all cursor-pointer">
+                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                                 Hapus
                                             </button>
                                         </form>
@@ -230,9 +239,19 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                {{ $users->links() }}
-            </div>
+            @if(isset($users) && $users->count() > 0)
+                <div class="px-6 py-4 bg-gray-50/60 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-gray-500">
+                    @if($users->hasPages())
+                        <div class="w-full">
+                            {{ $users->links() }}
+                        </div>
+                    @else
+                        <div>
+                            Menampilkan <span class="font-extrabold text-gray-800">{{ $users->firstItem() ?? 1 }}</span>–<span class="font-extrabold text-gray-800">{{ $users->lastItem() ?? $users->count() }}</span> dari <span class="font-extrabold text-gray-800">{{ $users->total() }}</span> total pengguna
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Modal Form Create / Edit User -->
@@ -289,8 +308,12 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs">Batal</button>
-                        <button type="submit" class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md">Simpan User</button>
+                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs cursor-pointer">Batal</button>
+                        <button type="button"
+                                @click="showModal = false; triggerConfirm(isEdit ? 'Konfirmasi Perbarui Data User' : 'Konfirmasi Simpan User Baru', 'Apakah Anda yakin ingin menyimpan perubahan data pengguna ini?', $el.closest('form'))"
+                                class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer">
+                            Simpan User
+                        </button>
                     </div>
                 </form>
             </div>

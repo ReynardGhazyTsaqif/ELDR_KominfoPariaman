@@ -3,7 +3,24 @@
         showModal: false,
         modalTitle: '',
         updateUrl: '',
-        form: { status_kode: '', status: '' }
+        form: { status_kode: '', status: '' },
+        showConfirm: false,
+        confirmTitle: '',
+        confirmMessage: '',
+        confirmForm: null,
+        triggerConfirm(title, message, formElement) {
+            this.confirmTitle = title;
+            this.confirmMessage = message;
+            this.confirmForm = formElement;
+            this.showConfirm = true;
+        },
+        executeConfirm() {
+            if (this.confirmForm) {
+                if (this.confirmForm.submitted) return;
+                this.confirmForm.submitted = true;
+                this.confirmForm.submit();
+            }
+        }
     }">
         <!-- Flash Alerts -->
         @if(session('success'))
@@ -62,20 +79,25 @@
         </div>
 
         <!-- Section 1: Tabel Status Dokumen Detail (ST01 - ST06) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden space-y-4 p-6">
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 overflow-hidden space-y-4 p-6">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="text-base font-extrabold text-[#061D38]">1. Status Dokumen Detail (ST01 – ST06)</h3>
-                <span class="text-xs font-bold text-gray-400">Total: {{ $statusDokumenList->count() }} Status</span>
+                <div>
+                    <h3 class="text-base font-extrabold text-[#061D38]">1. Status Dokumen Detail (ST01 – ST06)</h3>
+                    <span class="text-[11px] text-gray-400 font-medium">Kategori alur kerja verifikasi berjenjang internal</span>
+                </div>
+                <span class="text-xs font-extrabold bg-blue-50 text-[#062447] px-3 py-1 rounded-full border border-blue-100">
+                    {{ $statusDokumenList->count() }} Status
+                </span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b border-gray-100 text-[11px] font-extrabold text-gray-400 uppercase tracking-wider bg-gray-50/50">
-                            <th class="py-3 px-4">KEY</th>
-                            <th class="py-3 px-4">KODE STATUS</th>
-                            <th class="py-3 px-6">LABEL / DESKRIPSI TAMPILAN VISUAL</th>
-                            <th class="py-3 px-4 text-center">AKSI</th>
+                            <th class="py-3.5 px-4">KEY</th>
+                            <th class="py-3.5 px-4">KODE STATUS</th>
+                            <th class="py-3.5 px-6">LABEL / DESKRIPSI TAMPILAN VISUAL</th>
+                            <th class="py-3.5 px-4 text-center">AKSI</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50 text-sm font-semibold text-gray-700">
@@ -83,15 +105,15 @@
                             <tr class="hover:bg-gray-50/50 transition-all">
                                 <td class="py-3.5 px-4 font-mono text-xs text-gray-400 font-bold">#{{ $sd->status_key }}</td>
                                 <td class="py-3.5 px-4 font-mono text-xs font-extrabold text-[#061D38]">
-                                    <span class="px-2.5 py-1 bg-blue-50 text-blue-900 rounded-md border border-blue-100">{{ $sd->status_kode }}</span>
+                                    <span class="px-2.5 py-1 bg-blue-50 text-[#062447] rounded-lg border border-blue-100 font-black">{{ $sd->status_kode }}</span>
                                 </td>
                                 <td class="py-3.5 px-6 font-extrabold text-[#061D38]">
                                     {{ $sd->status }}
                                 </td>
-                                <td class="py-3.5 px-4 text-center">
+                                <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                     <button type="button"
                                             @click="updateUrl = '{{ route('master.status.updateDokumen', ['id' => $sd->status_key]) }}'; modalTitle = 'Edit Label Status: {{ $sd->status_kode }}'; form = { status_kode: '{{ $sd->status_kode }}', status: '{{ addslashes($sd->status) }}' }; showModal = true"
-                                            class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition-all">
+                                            class="px-3 py-1.5 bg-blue-50 hover:bg-[#062447] text-[#062447] hover:text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                         Edit Label
                                     </button>
                                 </td>
@@ -103,20 +125,25 @@
         </div>
 
         <!-- Section 2: Tabel Status Pengajuan Ringkas (SP01 - SP04) -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden space-y-4 p-6">
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 overflow-hidden space-y-4 p-6">
             <div class="flex items-center justify-between border-b border-gray-100 pb-3">
-                <h3 class="text-base font-extrabold text-[#061D38]">2. Status Pengajuan Ringkas (SP01 – SP04)</h3>
-                <span class="text-xs font-bold text-gray-400">Total: {{ $statusPengajuanList->count() }} Status</span>
+                <div>
+                    <h3 class="text-base font-extrabold text-[#061D38]">2. Status Pengajuan Ringkas (SP01 – SP04)</h3>
+                    <span class="text-[11px] text-gray-400 font-medium">Ringkasan status publik/OPD pengajuan dokumen</span>
+                </div>
+                <span class="text-xs font-extrabold bg-amber-50 text-amber-900 px-3 py-1 rounded-full border border-amber-200">
+                    {{ $statusPengajuanList->count() }} Status
+                </span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b border-gray-100 text-[11px] font-extrabold text-gray-400 uppercase tracking-wider bg-gray-50/50">
-                            <th class="py-3 px-4">KEY</th>
-                            <th class="py-3 px-4">KODE STATUS</th>
-                            <th class="py-3 px-6">LABEL / DESKRIPSI TAMPILAN VISUAL</th>
-                            <th class="py-3 px-4 text-center">AKSI</th>
+                            <th class="py-3.5 px-4">KEY</th>
+                            <th class="py-3.5 px-4">KODE STATUS</th>
+                            <th class="py-3.5 px-6">LABEL / DESKRIPSI TAMPILAN VISUAL</th>
+                            <th class="py-3.5 px-4 text-center">AKSI</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50 text-sm font-semibold text-gray-700">
@@ -124,15 +151,15 @@
                             <tr class="hover:bg-gray-50/50 transition-all">
                                 <td class="py-3.5 px-4 font-mono text-xs text-gray-400 font-bold">#{{ $sp->status_key }}</td>
                                 <td class="py-3.5 px-4 font-mono text-xs font-extrabold text-[#061D38]">
-                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-900 rounded-md border border-amber-100">{{ $sp->status_kode }}</span>
+                                    <span class="px-2.5 py-1 bg-amber-50 text-amber-900 rounded-lg border border-amber-200 font-black">{{ $sp->status_kode }}</span>
                                 </td>
                                 <td class="py-3.5 px-6 font-extrabold text-[#061D38]">
                                     {{ $sp->status }}
                                 </td>
-                                <td class="py-3.5 px-4 text-center">
+                                <td class="py-3.5 px-4 text-center whitespace-nowrap">
                                     <button type="button"
                                             @click="updateUrl = '{{ route('master.status.updatePengajuan', ['id' => $sp->status_key]) }}'; modalTitle = 'Edit Label Status: {{ $sp->status_kode }}'; form = { status_kode: '{{ $sp->status_kode }}', status: '{{ addslashes($sp->status) }}' }; showModal = true"
-                                            class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition-all">
+                                            class="px-3 py-1.5 bg-blue-50 hover:bg-[#062447] text-[#062447] hover:text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                         Edit Label
                                     </button>
                                 </td>
@@ -166,10 +193,39 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs">Batal</button>
-                        <button type="submit" class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md">Simpan Perubahan Label</button>
+                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs cursor-pointer">Batal</button>
+                        <button type="button"
+                                @click="showModal = false; triggerConfirm('Konfirmasi Edit Label Status', 'Apakah Anda yakin ingin memperbarui deskripsi label status ini?', $el.closest('form'))"
+                                class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer">
+                            Simpan Perubahan Label
+                        </button>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Custom Confirmation Modal (Alpine.js) -->
+        <div x-show="showConfirm" x-cloak class="fixed inset-0 z-50 overflow-y-auto bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+            <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-5 border border-gray-100 text-center">
+                <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center mx-auto border border-amber-200">
+                    <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+
+                <div class="space-y-1">
+                    <h3 class="text-base font-extrabold text-[#061D38]" x-text="confirmTitle"></h3>
+                    <p class="text-xs font-semibold text-gray-500 leading-relaxed" x-text="confirmMessage"></p>
+                </div>
+
+                <div class="flex items-center justify-center gap-3 pt-2">
+                    <button type="button" @click="showConfirm = false" class="px-5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs transition-all cursor-pointer">
+                        Batal
+                    </button>
+                    <button type="button" @click="executeConfirm()" class="px-5 py-2.5 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer">
+                        Ya, Lanjutkan
+                    </button>
+                </div>
             </div>
         </div>
     </div>

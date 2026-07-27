@@ -69,18 +69,18 @@
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
-                <span>+ Tambah Staf</span>
+                <span>Tambah Staf</span>
             </button>
         </div>
 
-        <!-- 1. KPI Summary Card -->
+        <!-- 1. KPI Summary Cards -->
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">TOTAL STAF DESA &amp; MASYARAKAT</h4>
                     <p class="text-3xl font-black text-[#061D38] mt-1 tracking-tight">{{ number_format($totalStaf ?? 0) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center flex-shrink-0 border border-blue-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5 5 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                     </svg>
@@ -90,9 +90,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DESA AKTIF TERHUBUNG</h4>
-                    <p class="text-3xl font-black text-emerald-600 mt-1 tracking-tight">{{ number_format($activeDesas->count()) }}</p>
+                    <p class="text-3xl font-black text-emerald-700 mt-1 tracking-tight">{{ number_format($activeDesas->count()) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0 border border-emerald-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                     </svg>
@@ -100,35 +100,44 @@
             </div>
         </div>
 
-        <!-- 2. Search & Filter Bar -->
+        <!-- 2. Search & Filter Bar (Live Instant Search As You Type) -->
         <div class="bg-white rounded-2xl p-4 shadow-xs border border-gray-100/80">
             <form method="GET" action="{{ route('master.staf') }}" class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div class="relative flex-1 w-full">
-                    <input type="text" name="search" value="{{ $search ?? '' }}" placeholder="Cari NIK atau nama staf/masyarakat..."
-                           class="w-full px-4 py-2.5 pl-10 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447]">
+                    <input type="text" 
+                           name="search" 
+                           value="{{ $search ?? '' }}" 
+                           placeholder="Ketik NIK atau nama staf/masyarakat untuk mencari..."
+                           @input.debounce.350ms="$el.form.submit()"
+                           class="w-full px-4 py-2.5 pl-10 pr-24 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-1 focus:ring-[#062447] font-medium transition-all">
                     <svg class="w-4 h-4 text-gray-400 absolute left-3.5 top-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
+                    @if($search)
+                        <a href="{{ route('master.staf') }}" class="absolute right-3 top-2 px-2.5 py-1 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold rounded-lg transition-all flex items-center gap-1 cursor-pointer">
+                            <span>Reset</span>
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </a>
+                    @endif
                 </div>
 
                 <div class="flex items-center gap-3 w-full sm:w-auto">
-                    <select name="desa" class="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none cursor-pointer">
+                    <select name="desa" @change="$el.form.submit()" class="px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 font-semibold focus:outline-none focus:border-[#062447] cursor-pointer">
                         <option value="">Semua Desa</option>
                         @foreach($activeDesas as $d)
                             <option value="{{ $d->desa_key }}" {{ ($desaFilter ?? '') == $d->desa_key ? 'selected' : '' }}>{{ $d->desa_nama }}</option>
                         @endforeach
                     </select>
 
-                    <button type="submit" class="px-5 py-2.5 bg-[#062447] text-white font-bold text-xs rounded-xl hover:bg-[#0A3363] transition-all">Filter</button>
                     @if($search || $desaFilter)
-                        <a href="{{ route('master.staf') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-all">Reset</a>
+                        <a href="{{ route('master.staf') }}" class="px-4 py-2.5 bg-gray-100 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-200 transition-all cursor-pointer whitespace-nowrap">Reset Filter</a>
                     @endif
                 </div>
             </form>
         </div>
 
         <!-- Table Card Container -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 overflow-hidden">
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
@@ -136,7 +145,7 @@
                             <th class="py-3.5 px-6">NIK / IDENTITAS</th>
                             <th class="py-3.5 px-6">NAMA STAF / MASYARAKAT</th>
                             <th class="py-3.5 px-6">DESA ASAL</th>
-                            <th class="py-3.5 px-4 text-center">STATUS (IKUT DESA)</th>
+                            <th class="py-3.5 px-4 text-center">STATUS SISTEM</th>
                             <th class="py-3.5 px-6 text-center">AKSI</th>
                         </tr>
                     </thead>
@@ -160,18 +169,18 @@
                                         {{ $desaAsal }}
                                     </span>
                                 </td>
-                                <td class="py-4 px-4 text-center">
+                                <td class="py-4 px-4 text-center whitespace-nowrap">
                                     @if($isDesaAktif)
-                                        <span class="inline-block bg-emerald-50 text-emerald-600 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
+                                        <span class="inline-block bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Aktif</span>
                                     @else
-                                        <span class="inline-block bg-amber-50 text-amber-700 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif (Ikut Desa)</span>
+                                        <span class="inline-block bg-slate-100 text-slate-600 border border-slate-200/80 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase tracking-wider">Nonaktif (Ikut Desa)</span>
                                     @endif
                                 </td>
-                                <td class="py-4 px-6 text-center">
+                                <td class="py-4 px-6 text-center whitespace-nowrap">
                                     <div class="flex items-center justify-center gap-2">
                                         <button type="button"
                                                 @click="isEdit = true; editUrl = '{{ route('master.staf.update', ['id' => $s->masyarakat_key]) }}'; modalTitle = 'Edit Staf: {{ addslashes($s->nama_masyarakat) }}'; form = { nik: '{{ addslashes($s->nik) }}', nama_masyarakat: '{{ addslashes($s->nama_masyarakat) }}', desa_key: '{{ $desaKey }}' }; showModal = true"
-                                                class="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-lg text-xs transition-all">
+                                                class="px-3 py-1.5 bg-blue-50 hover:bg-[#062447] text-[#062447] hover:text-white font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                             Edit
                                         </button>
 
@@ -180,7 +189,7 @@
                                             @method('DELETE')
                                             <button type="button"
                                                     @click="triggerConfirm('Konfirmasi Hapus Staf', 'Apakah Anda yakin ingin menghapus data staf {{ addslashes($s->nama_masyarakat) }}? Tindakan ini tidak dapat dibatalkan.', $el.closest('form'))"
-                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold rounded-lg text-xs transition-all cursor-pointer">
+                                                    class="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold rounded-xl text-xs transition-all cursor-pointer">
                                                 Hapus
                                             </button>
                                         </form>
@@ -197,9 +206,19 @@
                     </tbody>
                 </table>
             </div>
-            <div class="p-4 border-t border-gray-100">
-                {{ $stafs->links() }}
-            </div>
+            @if(isset($stafs) && $stafs->count() > 0)
+                <div class="px-6 py-4 bg-gray-50/60 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-gray-500">
+                    @if($stafs->hasPages())
+                        <div class="w-full">
+                            {{ $stafs->links() }}
+                        </div>
+                    @else
+                        <div>
+                            Menampilkan <span class="font-extrabold text-gray-800">{{ $stafs->firstItem() ?? 1 }}</span>–<span class="font-extrabold text-gray-800">{{ $stafs->lastItem() ?? $stafs->count() }}</span> dari <span class="font-extrabold text-gray-800">{{ $stafs->total() }}</span> total staf
+                        </div>
+                    @endif
+                </div>
+            @endif
         </div>
 
         <!-- Modal Form Create / Edit Staf -->
@@ -237,8 +256,12 @@
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-3 border-t border-gray-100">
-                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs">Batal</button>
-                        <button type="submit" class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md">Simpan Data</button>
+                        <button type="button" @click="showModal = false" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl text-xs cursor-pointer">Batal</button>
+                        <button type="button"
+                                @click="showModal = false; triggerConfirm(isEdit ? 'Konfirmasi Perbarui Data Staf' : 'Konfirmasi Simpan Staf Baru', 'Apakah Anda yakin ingin menyimpan perubahan data staf/masyarakat ini?', $el.closest('form'))"
+                                class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-extrabold text-xs rounded-xl shadow-md transition-all cursor-pointer">
+                            Simpan Data
+                        </button>
                     </div>
                 </form>
             </div>

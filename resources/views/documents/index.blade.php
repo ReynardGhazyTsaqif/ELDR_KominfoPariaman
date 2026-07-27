@@ -25,9 +25,9 @@
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">TOTAL DOKUMEN</h4>
                     <p class="text-3xl font-black text-[#061D38] mt-1 tracking-tight">{{ number_format($totalCount ?? 0) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-slate-100 text-[#061D38] flex items-center justify-center flex-shrink-0">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 01-2-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                 </div>
             </div>
@@ -36,9 +36,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 hover:shadow-md transition-all flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DISETUJUI</h4>
-                    <p class="text-3xl font-black text-emerald-600 mt-1 tracking-tight">{{ number_format($disetujuiCount ?? 0) }}</p>
+                    <p class="text-3xl font-black text-emerald-900 mt-1 tracking-tight">{{ number_format($disetujuiCount ?? 0) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center flex-shrink-0 border border-emerald-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -49,9 +49,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 hover:shadow-md transition-all flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DIPROSES</h4>
-                    <p class="text-3xl font-black text-amber-600 mt-1 tracking-tight">{{ number_format($diprosesCount ?? 0) }}</p>
+                    <p class="text-3xl font-black text-amber-900 mt-1 tracking-tight">{{ number_format($diprosesCount ?? 0) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0 border border-amber-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -62,9 +62,9 @@
             <div class="bg-white rounded-2xl p-6 shadow-xs border border-gray-100/80 hover:shadow-md transition-all flex items-center justify-between">
                 <div>
                     <h4 class="text-[11px] font-extrabold text-gray-400 uppercase tracking-wider">DITOLAK / REVISI</h4>
-                    <p class="text-3xl font-black text-rose-500 mt-1 tracking-tight">{{ number_format($ditolakCount ?? 0) }}</p>
+                    <p class="text-3xl font-black text-rose-900 mt-1 tracking-tight">{{ number_format($ditolakCount ?? 0) }}</p>
                 </div>
-                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-500 flex items-center justify-center flex-shrink-0">
+                <div class="w-12 h-12 rounded-2xl bg-rose-50 text-rose-700 flex items-center justify-center flex-shrink-0 border border-rose-100">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -72,75 +72,81 @@
             </div>
         </div>
 
-        <!-- 2. Filter Card Container -->
-        <form action="{{ route('documents.index') }}" method="GET" class="bg-white rounded-2xl shadow-xs border border-gray-100/80 p-6 space-y-5">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-                <!-- Cari Nama / Perihal -->
-                <div>
-                    <label for="search" class="block text-xs font-bold text-gray-700 mb-2">Cari Nama File / Perihal</label>
-                    <div class="relative">
-                        <input type="text" id="search" name="search" value="{{ $search ?? '' }}" placeholder="Masukkan kata kunci..."
-                               class="w-full px-3.5 py-2.5 pl-9 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
-                        <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Jenis Dokumen -->
-                <div>
-                    <label for="jenis" class="block text-xs font-bold text-gray-700 mb-2">Jenis Dokumen</label>
-                    <div class="relative">
-                        <select id="jenis" name="jenis" class="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 appearance-none cursor-pointer transition-all">
-                            <option value="">Semua Jenis Dokumen</option>
-                            @if(isset($jenisList))
-                                @foreach($jenisList as $j)
-                                    <option value="{{ $j->jenis_dokumen_key }}" {{ ($jenisKey ?? '') == $j->jenis_dokumen_key ? 'selected' : '' }}>
-                                        {{ $j->jenis_dokumen }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                        <svg class="w-4 h-4 text-gray-500 absolute right-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Status -->
-                <div>
-                    <label for="status" class="block text-xs font-bold text-gray-700 mb-2">Status Pengajuan</label>
-                    <div class="relative">
-                        <select id="status" name="status" class="w-full px-3.5 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 appearance-none cursor-pointer transition-all">
-                            <option value="">Semua Status Pengajuan</option>
-                            @if(isset($statusList))
-                                @foreach($statusList as $st)
-                                    <option value="{{ $st->status_key }}" {{ ($statusKey ?? '') == $st->status_key ? 'selected' : '' }}>
-                                        {{ $st->status }}
-                                    </option>
-                                @endforeach
-                            @endif
-                        </select>
-                        <svg class="w-4 h-4 text-gray-500 absolute right-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-                        </svg>
-                    </div>
-                </div>
+        <!-- 2. Single Combined Toolbar Filter & Search -->
+        <form id="filterForm" action="{{ route('documents.index') }}" method="GET" class="bg-white rounded-2xl shadow-xs border border-gray-100/80 p-3.5 flex flex-col md:flex-row items-center gap-3">
+            <!-- Search Input (Flex Grow) -->
+            <div class="relative flex-1 w-full">
+                <input type="text" id="searchInput" name="search" value="{{ $search ?? '' }}" placeholder="Cari nama dokumen atau perihal..."
+                       oninput="debouncedSubmit()"
+                       class="w-full px-3.5 py-2.5 pl-9 bg-gray-50/60 border border-gray-200 rounded-xl text-xs font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
+                <svg class="w-4 h-4 text-gray-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
             </div>
 
-            <!-- Filter Buttons Right Aligned -->
-            <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
-                <a href="{{ route('documents.index') }}" class="px-5 py-2 bg-white border border-gray-300 hover:bg-gray-50 text-gray-700 font-bold text-sm rounded-xl transition-all shadow-xs">
-                    Reset Filter
-                </a>
-                <button type="submit" class="px-5 py-2 bg-[#062447] hover:bg-[#0A3363] text-white font-bold text-sm rounded-xl flex items-center gap-2 shadow-md transition-all cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            <!-- Filter Jenis -->
+            <div class="relative w-full md:w-52 flex-shrink-0">
+                <select name="jenis" onchange="document.getElementById('filterForm').submit()" class="w-full px-3.5 py-2.5 bg-gray-50/60 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 appearance-none cursor-pointer transition-all">
+                    <option value="">Semua Jenis Dokumen</option>
+                    @if(isset($jenisList))
+                        @foreach($jenisList as $j)
+                            <option value="{{ $j->jenis_dokumen_key }}" {{ ($jenisKey ?? '') == $j->jenis_dokumen_key ? 'selected' : '' }}>
+                                {{ $j->jenis_dokumen }}
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+                <svg class="w-3.5 h-3.5 text-gray-500 absolute right-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <!-- Filter Status -->
+            <div class="relative w-full md:w-56 flex-shrink-0">
+                <select name="status" onchange="document.getElementById('filterForm').submit()" class="w-full px-3.5 py-2.5 bg-gray-50/60 border border-gray-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 appearance-none cursor-pointer transition-all">
+                    <option value="">Semua Status Pengajuan</option>
+                    @if(isset($statusList))
+                        @foreach($statusList as $st)
+                            <option value="{{ $st->status_key }}" {{ ($statusKey ?? '') == $st->status_key ? 'selected' : '' }}>
+                                {{ $st->status }}
+                            </option>
+                        @endforeach
+                    @endif
+                </select>
+                <svg class="w-3.5 h-3.5 text-gray-500 absolute right-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </div>
+
+            <!-- Reset Button if filter active -->
+            @if(!empty($search) || !empty($jenisKey) || !empty($statusKey))
+                <a href="{{ route('documents.index') }}" class="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition-all whitespace-nowrap flex items-center gap-1.5 flex-shrink-0" title="Reset Filter">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
-                    <span>Cari Dokumen</span>
-                </button>
-            </div>
+                    <span>Reset Filter</span>
+                </a>
+            @endif
         </form>
+
+        <script>
+            let debounceTimer;
+            function debouncedSubmit() {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    document.getElementById('filterForm').submit();
+                }, 400);
+            }
+            document.addEventListener("DOMContentLoaded", function() {
+                const input = document.getElementById('searchInput');
+                if (input && input.value) {
+                    input.focus();
+                    const val = input.value;
+                    input.value = '';
+                    input.value = val;
+                }
+            });
+        </script>
 
         <!-- 3. Daftar Dokumen Table Card -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-100/80 overflow-hidden">
@@ -151,8 +157,7 @@
                             <th class="py-3.5 px-6">NAMA DOKUMEN</th>
                             <th class="py-3.5 px-6">JENIS DOKUMEN</th>
                             <th class="py-3.5 px-6">PERIHAL</th>
-                            <th class="py-3.5 px-6">TANGGAL UPLOAD</th>
-                            <th class="py-3.5 px-4 text-center">STATUS</th>
+                            <th class="py-3.5 px-4 text-center">STATUS DOKUMEN</th>
                             <th class="py-3.5 px-6">OPD/DESA PENGAJU</th>
                             <th class="py-3.5 px-6 text-center">AKSI</th>
                         </tr>
@@ -161,54 +166,46 @@
                         @if(isset($documents) && $documents->count() > 0)
                             @foreach($documents as $doc)
                                 @php
-                                    $stKey = $doc->status_pengajuan_key;
                                     $docStKey = $doc->status_dokumen_key;
-                                    $statusLabel = $doc->statusPengajuan->status ?? 'Pengajuan';
-                                    $badgeClass = 'bg-amber-50 text-amber-700';
+                                    $statusText = $doc->statusDokumen->status ?? ($doc->statusPengajuan->status ?? 'File Terkirim');
 
-                                    if ($docStKey == 6 || ($stKey == 4 && $docStKey != 3)) {
-                                        $statusLabel = 'Disetujui Final';
-                                        $badgeClass = 'bg-emerald-50 text-emerald-700 border border-emerald-200';
-                                    } elseif ($docStKey == 3 || $stKey == 3) {
-                                        $statusLabel = 'Perlu Revisi';
-                                        $badgeClass = 'bg-rose-50 text-rose-700 border border-rose-200';
+                                    if ($docStKey == 6) {
+                                        $badgeClass = 'bg-emerald-50 text-emerald-800 border border-emerald-200';
+                                    } elseif (in_array($docStKey, [3, 4])) {
+                                        $badgeClass = 'bg-rose-50 text-rose-800 border border-rose-200';
                                     } elseif ($docStKey == 5) {
-                                        $statusLabel = 'Proses Kabag Hukum';
-                                        $badgeClass = 'bg-blue-50 text-blue-700 border border-blue-200';
+                                        $badgeClass = 'bg-amber-50 text-amber-800 border border-amber-200';
                                     } else {
-                                        $statusLabel = 'Proses Admin Hukum';
-                                        $badgeClass = 'bg-amber-50 text-amber-700 border border-amber-200';
+                                        $badgeClass = 'bg-slate-100 text-slate-800 border border-slate-200';
                                     }
                                 @endphp
                                 <tr class="hover:bg-gray-50/50 transition-all">
                                     <td class="py-4 px-6">
-                                        <div class="flex items-center gap-3">
-                                            <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center flex-shrink-0 font-black text-[10px]">
-                                                DOC
-                                            </div>
-                                            <a href="{{ route('documents.show', ['id' => $doc->dokumen_id]) }}" class="font-extrabold text-[#061D38] hover:underline">
-                                                {{ $doc->dokumen->dokumen_judul ?? 'Dokumen #' . $doc->dokumen_id }}
-                                            </a>
-                                        </div>
+                                        <a href="{{ route('documents.show', ['id' => $doc->dokumen_id]) }}" class="font-extrabold text-[#061D38] hover:underline block leading-snug">
+                                            {{ $doc->dokumen->dokumen_judul ?? 'Dokumen #' . $doc->dokumen_id }}
+                                        </a>
+                                        <span class="text-[10px] text-gray-400 font-mono font-bold block mt-0.5">
+                                            ID: #DOC-{{ str_pad($doc->dokumen_id, 4, '0', STR_PAD_LEFT) }}
+                                        </span>
                                     </td>
-                                    <td class="py-4 px-6 text-xs text-gray-600 font-bold">
+                                    <td class="py-4 px-6 text-xs text-gray-600 font-bold whitespace-nowrap">
                                         {{ $doc->jenisDokumen->jenis_dokumen ?? '-' }}
                                     </td>
                                     <td class="py-4 px-6 text-xs text-gray-600 max-w-xs truncate" title="{{ $doc->perihalDokumen->perihal_dokumen ?? '' }}">
                                         {{ $doc->perihalDokumen->perihal_dokumen ?? '-' }}
                                     </td>
-                                    <td class="py-4 px-6 text-xs text-gray-500 font-medium">
-                                        {{ $doc->created_at ? $doc->created_at->format('d M Y, H:i') : '-' }}
-                                    </td>
-                                    <td class="py-4 px-4 text-center">
+                                    <td class="py-4 px-4 text-center whitespace-nowrap">
                                         <span class="inline-block {{ $badgeClass }} font-extrabold px-3 py-1 rounded-full text-[10px] tracking-wider uppercase">
-                                            {{ strtoupper($statusLabel) }}
+                                            {{ strtoupper($statusText) }}
+                                        </span>
+                                        <span class="block text-[10px] text-gray-400 font-medium mt-1">
+                                            {{ $doc->created_at ? $doc->created_at->format('d M Y, H:i \W\I\B') : '-' }}
                                         </span>
                                     </td>
                                     <td class="py-4 px-6 text-xs font-bold text-gray-600">
                                         {{ $doc->subjek->unit_kerja ?? $doc->subjek->nama_subjek ?? '-' }}
                                     </td>
-                                    <td class="py-4 px-6 text-center">
+                                    <td class="py-4 px-6 text-center whitespace-nowrap">
                                         <div class="flex items-center justify-center gap-2">
                                             <a href="{{ route('documents.show', ['id' => $doc->dokumen_id]) }}" title="Lihat Detail & Audit Trail" class="p-1.5 text-[#061D38] hover:bg-gray-100 rounded-lg transition-all cursor-pointer">
                                                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -229,7 +226,7 @@
                             @endforeach
                         @else
                             <tr>
-                                <td colspan="7" class="py-12 text-center text-gray-400 font-medium">
+                                <td colspan="6" class="py-12 text-center text-gray-400 font-medium">
                                     <div class="flex flex-col items-center justify-center gap-2">
                                         <svg class="w-10 h-10 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -245,9 +242,17 @@
             </div>
 
             <!-- Table Pagination Bar -->
-            @if(isset($documents) && $documents->hasPages())
-                <div class="p-4 bg-gray-50/60 border-t border-gray-100">
-                    {{ $documents->links() }}
+            @if(isset($documents) && $documents->count() > 0)
+                <div class="px-6 py-4 bg-gray-50/60 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-gray-500">
+                    @if($documents->hasPages())
+                        <div class="w-full">
+                            {{ $documents->links() }}
+                        </div>
+                    @else
+                        <div>
+                            Menampilkan <span class="font-extrabold text-gray-800">{{ $documents->firstItem() ?? 1 }}</span>–<span class="font-extrabold text-gray-800">{{ $documents->lastItem() ?? $documents->count() }}</span> dari <span class="font-extrabold text-gray-800">{{ $documents->total() }}</span> total dokumen
+                        </div>
+                    @endif
                 </div>
             @endif
         </div>
