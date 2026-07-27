@@ -10,35 +10,51 @@
             }
         }
     }">
-        <!-- Main Form Card Container -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100/80">
-            <!-- Dark Navy Header Strip -->
-            <div class="bg-[#062447] text-white px-8 py-5 flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        <!-- Page Header & Back Button -->
+        <div class="flex items-center justify-between border-b border-gray-100 pb-4">
+            <div>
+                <h2 class="text-2xl font-black text-[#061D38] tracking-tight">Pengajuan Dokumen Produk Hukum Baru</h2>
+                <p class="text-xs font-semibold text-gray-500 mt-1">
+                    Unggah naskah rancangan/produk hukum untuk diproses verifikasi oleh Bagian Hukum Kota Pariaman.
+                </p>
+            </div>
+            <a href="{{ route('dashboard') }}" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                <span>Kembali</span>
+            </a>
+        </div>
+
+        <!-- Flash Error Alerts -->
+        @if(session('error'))
+            <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm font-semibold rounded-2xl flex items-center justify-between shadow-xs">
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h2 class="text-lg font-extrabold tracking-tight text-white">Pengajuan Dokumen Hukum Baru</h2>
+                    <span>{{ session('error') }}</span>
                 </div>
             </div>
+        @endif
 
-            <!-- Form Content Body -->
-            <form id="create-doc-form" action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data" class="p-8 space-y-6">
+        @if($errors->any())
+            <div class="p-4 bg-rose-50 border border-rose-200 text-rose-800 text-sm rounded-2xl space-y-1">
+                <p class="font-extrabold text-xs uppercase tracking-wider">Terdapat kesalahan pengisian form:</p>
+                <ul class="list-disc list-inside text-xs font-semibold">
+                    @foreach($errors->all() as $err)
+                        <li>{{ $err }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+        <!-- Form Card Container -->
+        <div class="bg-white rounded-2xl shadow-xs border border-gray-100/80 p-6 lg:p-8">
+            <form id="create-doc-form" action="{{ route('documents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
-                <!-- Display Errors if any -->
-                @if ($errors->any())
-                    <div class="bg-rose-50 border border-rose-200 text-rose-800 text-xs font-semibold p-4 rounded-xl space-y-1">
-                        <p class="font-extrabold text-sm">Gagal Mengajukan Dokumen:</p>
-                        <ul class="list-disc list-inside space-y-0.5">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                @endif
-
-                <!-- Row 1: JUDUL DOKUMEN & JENIS DOKUMEN -->
+                <!-- Row 1: Judul Dokumen & Jenis Dokumen -->
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <!-- Judul File -->
                     <div>
@@ -47,7 +63,7 @@
                         </label>
                         <input type="text" id="judul_file" name="judul_file" value="{{ old('judul_file', old('nama_file')) }}" required
                                placeholder="Masukkan judul dokumen resmi..."
-                               class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
+                               class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
                     </div>
 
                     <!-- Jenis Dokumen -->
@@ -55,29 +71,30 @@
                         <label for="jenis_dokumen_key" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
                             JENIS DOKUMEN <span class="text-rose-500">*</span>
                         </label>
-                        <div class="relative">
-                            @php
-                                $jenisDokumenList = \App\Models\JenisDokumen::all();
-                            @endphp
-                            <select id="jenis_dokumen_key" name="jenis_dokumen_key" required
-                                    class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 appearance-none cursor-pointer transition-all">
-                                <option value="" disabled {{ old('jenis_dokumen_key', old('jenis_dokumen')) ? '' : 'selected' }}>Pilih jenis dokumen...</option>
-                                @foreach($jenisDokumenList as $jd)
-                                    <option value="{{ $jd->jenis_dokumen_key }}" {{ old('jenis_dokumen_key', old('jenis_dokumen')) == $jd->jenis_dokumen_key ? 'selected' : '' }}>
-                                        {{ $jd->jenis_dokumen }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <svg class="w-4 h-4 text-gray-500 absolute right-3.5 top-3.5 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <!-- Section 1: Upload File Naskah (PDF/DOCX) -->
+                        @php
+                            $jenisDokumenList = \App\Models\JenisDokumen::all();
+                        @endphp
+                        <select id="jenis_dokumen_key" name="jenis_dokumen_key" required
+                                class="w-full px-4 py-2.5 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 cursor-pointer transition-all">
+                            <option value="" disabled {{ old('jenis_dokumen_key', old('jenis_dokumen')) ? '' : 'selected' }}>Pilih jenis dokumen...</option>
+                            @foreach($jenisDokumenList as $jd)
+                                <option value="{{ $jd->jenis_dokumen_key }}" {{ old('jenis_dokumen_key', old('jenis_dokumen')) == $jd->jenis_dokumen_key ? 'selected' : '' }}>
+                                    {{ $jd->jenis_dokumen }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Row 2: Upload File Berkas (.doc / .docx) -->
                 <div>
-                    <label class="block text-xs font-extrabold text-[#061D38] uppercase tracking-wider mb-2">
-                        UNGGAH BERKAS NASKAH DOKUMEN <span class="text-rose-500">*</span>
+                    <label class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
+                        UPLOAD FILE BERKAS NASKAH (.DOC / .DOCX) <span class="text-rose-500">*</span>
                     </label>
-                    
+
                     <div id="upload-box-container" class="relative border-2 border-dashed border-gray-300 rounded-2xl p-8 text-center cursor-pointer transition-all bg-gray-50/50 hover:bg-blue-50/40 hover:border-[#062447] group">
-                        <input type="file" name="file" id="file" accept=".pdf,.doc,.docx" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelected(this)">
-                        
+                        <input type="file" name="file_dokumen" id="file_dokumen" accept=".doc,.docx" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" onchange="handleFileSelected(this)">
+
                         <div id="upload-default-prompt" class="flex flex-col items-center justify-center gap-2">
                             <div class="w-12 h-12 rounded-2xl bg-blue-50 text-[#062447] flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,10 +102,10 @@
                                 </svg>
                             </div>
                             <h4 class="text-sm font-extrabold text-gray-800">
-                                Klik untuk memilih berkas atau seret ke area ini
+                                Klik untuk unggah atau seret berkas Word ke sini
                             </h4>
                             <p class="text-xs text-gray-400 font-medium">
-                                Format yang didukung: PDF, Microsoft Word (.doc, .docx) • Maksimal 20 MB
+                                Wajib format Microsoft Word (.doc / .docx) • Maksimal 20 MB
                             </p>
                         </div>
 
@@ -101,64 +118,23 @@
                             <span class="inline-flex items-center gap-1.5 bg-emerald-100 text-emerald-800 font-extrabold px-3 py-1 rounded-full text-[10px] uppercase">
                                 ✓ Berkas Berhasil Dipilih
                             </span>
-                            <h4 id="display-filename" class="text-xs font-extrabold text-[#062447] break-all max-w-md mt-1"></h4>
+                            <h4 id="display-filename" class="text-xs font-extrabold text-[#061D38] break-all max-w-md mt-1"></h4>
                             <p id="display-filesize" class="text-[11px] text-emerald-700 font-bold"></p>
                         </div>
                     </div>
                 </div>
 
-                <!-- Section 2: Metadata Dokumen -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
-                    <!-- Judul Dokumen -->
-                    <div class="md:col-span-2">
-                        <label for="judul_file" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
-                            JUDUL DOKUMEN PRODUK HUKUM <span class="text-rose-500">*</span>
-                        </label>
-                        <input type="text" id="judul_file" name="judul_file" value="{{ old('judul_file') }}" required
-                               placeholder="Contoh: Ranperwako Pembentukan Susunan Organisasi Tata Kerja..."
-                               class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
-                    </div>
-
-                    <!-- Jenis Dokumen -->
-                    <div>
-                        <label for="jenis_dokumen_key" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
-                            KATEGORI / JENIS DOKUMEN <span class="text-rose-500">*</span>
-                        </label>
-                        @php
-                            $jenisList = \App\Models\JenisDokumen::all();
-                        @endphp
-                        <select id="jenis_dokumen_key" name="jenis_dokumen_key" required
-                                class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all cursor-pointer">
-                            <option value="" disabled {{ old('jenis_dokumen_key') ? '' : 'selected' }}>-- Pilih Jenis Dokumen --</option>
-                            @foreach($jenisList as $j)
-                                <option value="{{ $j->jenis_dokumen_key }}" {{ old('jenis_dokumen_key') == $j->jenis_dokumen_key ? 'selected' : '' }}>
-                                    {{ $j->jenis_dokumen }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <!-- Subjek Pengaju -->
-                    <div>
-                        <label for="subjek_key" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
-                            INSTANSI / SUBJEK PENGAJU <span class="text-rose-500">*</span>
-                        </label>
-                        @php
-                            $subjekList = \App\Models\Subjek::all();
-                            $defaultSubjekKey = auth()->user()->subjek_key ?? null;
-                        @endphp
-                        <select id="subjek_key" name="subjek_key" required
-                                class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all cursor-pointer">
-                            @foreach($subjekList as $s)
-                                <option value="{{ $s->subjek_key }}" {{ (old('subjek_key') ?? $defaultSubjekKey) == $s->subjek_key ? 'selected' : '' }}>
-                                    {{ $s->nama_subjek }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
+                <!-- Row 3: Perihal -->
+                <div>
+                    <label for="perihal" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
+                        PERIHAL / SUBJEK DOKUMEN <span class="text-rose-500">*</span>
+                    </label>
+                    <input type="text" id="perihal" name="perihal" value="{{ old('perihal') }}" required
+                           placeholder="Subjek atau inti ringkasan perihal dokumen..."
+                           class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm font-semibold text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all">
                 </div>
 
-                <!-- Section 3: Catatan Pengajuan -->
+                <!-- Row 4: Catatan Pengajuan -->
                 <div>
                     <label for="catatan" class="block text-xs font-extrabold text-gray-700 uppercase tracking-wider mb-2">
                         CATATAN / PENGANTAR PENGAJUAN <span class="text-gray-400 font-normal lowercase">(opsional)</span>
@@ -166,6 +142,18 @@
                     <textarea id="catatan" name="catatan" rows="4"
                               placeholder="Tambahkan instruksi khusus atau catatan untuk verifikator..."
                               class="w-full px-4 py-3 bg-white border border-gray-200 rounded-xl text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#062447] focus:ring-2 focus:ring-[#062447]/20 transition-all resize-none">{{ old('catatan') }}</textarea>
+                </div>
+
+                <!-- Warning Alert Box -->
+                <div class="bg-amber-50/70 border-l-4 border-amber-500 p-4 rounded-r-xl text-xs text-amber-900 flex items-start gap-3 shadow-xs">
+                    <div class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
+                    <p class="leading-relaxed font-medium">
+                        Dokumen yang diajukan akan melalui proses verifikasi oleh bagian hukum sebelum dipublikasikan. Pastikan isi dokumen telah sesuai dengan standar legal formal Pemerintah Kota Pariaman.
+                    </p>
                 </div>
 
                 <!-- Action Buttons -->
@@ -177,7 +165,7 @@
                         <svg class="w-4 h-4 text-[#F5BF38]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
                         </svg>
-                        <span>Simpan & Ajukan</span>
+                        <span>Simpan &amp; Ajukan</span>
                     </button>
                 </div>
             </form>
